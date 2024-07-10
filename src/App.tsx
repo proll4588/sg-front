@@ -1,9 +1,10 @@
-import { Button, Grid, Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
+import { AppLayout } from './shared/layout/AppLayout';
 
 export const App = () => {
   return (
-    <Grid>
+    <AppLayout>
       <Typography>Hello World</Typography>
-    </Grid>
+    </AppLayout>
   );
 };

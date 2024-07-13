@@ -3,7 +3,6 @@ import {
   FC,
   PropsWithChildren,
   useContext,
-  useEffect,
   useState,
 } from 'react';
 import { tokenController } from '../token';
@@ -35,34 +34,34 @@ export const UserContext = createContext<UserContextType>(
 export const useUser = () => useContext(UserContext);
 
 export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
-  const [loginUser, { data, loading, error }] = useLazyQuery(LOGIN);
+  const [loginUser, { loading, error }] = useLazyQuery(LOGIN, {
+    fetchPolicy: 'network-only',
+  });
   const [isAuth, setIsAuth] = useState(!!tokenController.getToken());
 
   const login = async (login: string, password: string) => {
-    await loginUser({
+    const res = await loginUser({
       variables: {
         login,
         password,
       },
     });
+
+    const { data } = res;
+
+    if (data && data.login && data.login.token) {
+      const t = data.login.token;
+
+      tokenController.saveToken(t);
+      client.setLink(getLink());
+      setIsAuth(true);
+    }
   };
 
   const logout = () => {
     tokenController.clearToken();
     setIsAuth(false);
   };
-
-  useEffect(() => {
-    if (data) {
-      const t = data.login.token;
-
-      if (!t) return;
-
-      tokenController.saveToken(t);
-      client.setLink(getLink());
-      setIsAuth(true);
-    }
-  }, [data]);
 
   return (
     <UserContext.Provider

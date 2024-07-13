@@ -3,13 +3,17 @@ import {
   FC,
   PropsWithChildren,
   useContext,
+  useEffect,
+  useMemo,
   useState,
 } from 'react';
 import { tokenController } from '../token';
-import { useLazyQuery } from '@apollo/client';
-import { LOGIN } from '../../apollo/fetchs';
+import { useLazyQuery, useQuery } from '@apollo/client';
+import { GET_USER, LOGIN } from '../../apollo/fetchs';
 import client from '../../apollo/client';
 import { getLink } from '../../apollo/link';
+import { User } from '../../widget/tables/users-table/type';
+import { APP_NAVIGATION_MAP, AppNavigationMapType } from '../router/constants';
 
 interface UserContextType {
   isAuth: boolean;
@@ -17,6 +21,8 @@ interface UserContextType {
   logout: () => void;
   isLoading: boolean;
   error?: string;
+  user: User | null;
+  modules: AppNavigationMapType[];
 }
 
 const USER_CONTEXT_DEFAULT_VALUE: UserContextType = {
@@ -25,6 +31,8 @@ const USER_CONTEXT_DEFAULT_VALUE: UserContextType = {
   logout: () => {},
   isLoading: false,
   error: undefined,
+  user: null,
+  modules: [],
 };
 
 export const UserContext = createContext<UserContextType>(
@@ -38,6 +46,11 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
     fetchPolicy: 'network-only',
   });
   const [isAuth, setIsAuth] = useState(!!tokenController.getToken());
+  const { data: userRes, refetch } = useQuery(GET_USER, { skip: !isAuth });
+
+  useEffect(() => {
+    if (isAuth) refetch();
+  }, [isAuth]);
 
   const login = async (login: string, password: string) => {
     const res = await loginUser({
@@ -63,6 +76,14 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
     setIsAuth(false);
   };
 
+  const modules = useMemo(() => {
+    if (!userRes?.getUser) return [];
+    else
+      return APP_NAVIGATION_MAP.filter((el) =>
+        el.access.some((el2) => el2 === userRes.getUser.Role.id)
+      );
+  }, [userRes?.getUser]);
+
   return (
     <UserContext.Provider
       value={{
@@ -71,6 +92,8 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
         logout,
         isLoading: loading,
         error: error?.message,
+        user: userRes?.getUser || null,
+        modules,
       }}
     >
       {children}

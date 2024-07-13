@@ -13,6 +13,7 @@ import { ThemeProvider } from '@mui/material';
 import { theme } from './widget/theme.ts';
 import { AuthPage } from './pages/AuthPage/AuthPage.tsx';
 import { router } from './shared/router/router.tsx';
+import { ConfirmProvider } from './shared/confirm/ConfirmContext.tsx';
 
 const AuthLayout = () => {
   const { isAuth } = useUser();
@@ -26,7 +27,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <ApolloProvider client={client}>
       <UserProvider>
         <ThemeProvider theme={theme}>
-          <AuthLayout />
+          <ConfirmProvider>
+            <AuthLayout />
+          </ConfirmProvider>
         </ThemeProvider>
       </UserProvider>
     </ApolloProvider>

@@ -1,0 +1,1 @@
+export { DialogConfirmForm } from './DialogConfirmForm';

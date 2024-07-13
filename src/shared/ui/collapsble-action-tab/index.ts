@@ -1,0 +1,1 @@
+export { CollapsbleActionTab } from './CollapsbleActionTab';

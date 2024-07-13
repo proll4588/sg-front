@@ -1,0 +1,1 @@
+export { UiTableHeader } from './UiTableHeader';

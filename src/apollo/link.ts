@@ -1,4 +1,4 @@
-import { ApolloLink, concat, HttpLink } from '@apollo/client';
+import { ApolloLink, concat } from '@apollo/client';
 // @ts-ignore
 import { createUploadLink } from 'apollo-upload-client';
 import { tokenController } from '../shared/token';

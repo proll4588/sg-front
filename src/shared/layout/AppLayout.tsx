@@ -9,9 +9,10 @@ import {
 } from '@mui/material';
 import { useUser } from '../context/UserContext';
 import { Menu } from '@mui/icons-material';
-import { FC, PropsWithChildren } from 'react';
+import { FC } from 'react';
+import { Outlet } from 'react-router-dom';
 
-export const AppLayout: FC<PropsWithChildren> = ({ children }) => {
+export const AppLayout: FC = ({}) => {
   const { logout } = useUser();
 
   return (
@@ -46,7 +47,9 @@ export const AppLayout: FC<PropsWithChildren> = ({ children }) => {
         </AppBar>
       </Box>
 
-      <Grid p={2}>{children}</Grid>
+      <Grid p={2}>
+        <Outlet />
+      </Grid>
     </Grid>
   );
 };

@@ -1,10 +1,15 @@
-import { Grid, Typography } from '@mui/material';
-import { AppLayout } from './shared/layout/AppLayout';
+import { Card, CardActionArea, CardContent, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 export const App = () => {
+  const navigate = useNavigate();
   return (
-    <AppLayout>
-      <Typography>Hello World</Typography>
-    </AppLayout>
+    <Card>
+      <CardActionArea onClick={() => navigate('/user-control')}>
+        <CardContent>
+          <Typography>Управление пользователями</Typography>
+        </CardContent>
+      </CardActionArea>
+    </Card>
   );
 };

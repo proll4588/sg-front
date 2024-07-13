@@ -14,7 +14,12 @@ export const LoginForm: FC<LoginFormProps> = ({
   onSubmit,
   renderFormActions,
 }) => {
-  const { control, handleSubmit } = useForm<LoginFormFields>();
+  const { control, handleSubmit } = useForm<LoginFormFields>({
+    defaultValues: {
+      login: '',
+      password: '',
+    },
+  });
   const [showPassword, setShowPassword] = useState(false);
 
   return (

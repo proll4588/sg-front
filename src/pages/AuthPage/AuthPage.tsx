@@ -21,6 +21,7 @@ export const AuthPage = () => {
         }}
         renderFormActions={() => [
           <LoadingButton
+            key={1}
             type='submit'
             loading={isLoading}
             variant='contained'

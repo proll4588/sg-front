@@ -11,7 +11,7 @@ import { UserProvider, useUser } from './shared/context/UserContext.tsx';
 import { RouterProvider } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material';
 import { theme } from './widget/theme.ts';
-import { AuthPage } from './assets/AuthPage/AuthPage.tsx';
+import { AuthPage } from './pages/AuthPage/AuthPage.tsx';
 import { router } from './shared/router/router.tsx';
 
 const AuthLayout = () => {

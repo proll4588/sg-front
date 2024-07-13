@@ -1,26 +1,26 @@
-import { Button, Grid, TextField } from '@mui/material';
-import { FC } from 'react';
+import { IconButton, InputAdornment, TextField } from '@mui/material';
+import { FC, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { FormLayout } from '../../../shared/ui/form/form-layout';
+import {
+  AccountCircle,
+  Password,
+  Visibility,
+  VisibilityOff,
+} from '@mui/icons-material';
+import { LoginFormFields, LoginFormProps } from './type';
 
-interface LoginFormFields {
-  login: string;
-  password: string;
-}
-
-interface LoginFormProps {
-  onSubmit: (form: LoginFormFields) => void;
-}
-
-export const LoginForm: FC<LoginFormProps> = ({ onSubmit }) => {
+export const LoginForm: FC<LoginFormProps> = ({
+  onSubmit,
+  renderFormActions,
+}) => {
   const { control, handleSubmit } = useForm<LoginFormFields>();
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <Grid
-      component={'form'}
+    <FormLayout
       onSubmit={handleSubmit(onSubmit)}
-      container
-      flexDirection={'column'}
-      gap={2}
+      actions={renderFormActions(handleSubmit)}
     >
       <Controller
         control={control}
@@ -28,8 +28,17 @@ export const LoginForm: FC<LoginFormProps> = ({ onSubmit }) => {
         rules={{ required: true }}
         render={({ field: { value, onChange } }) => (
           <TextField
+            label='Логин'
+            placeholder='Введите логин'
             value={value}
             onChange={(e) => onChange(e.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position='start'>
+                  <AccountCircle />
+                </InputAdornment>
+              ),
+            }}
           />
         )}
       />
@@ -40,19 +49,29 @@ export const LoginForm: FC<LoginFormProps> = ({ onSubmit }) => {
         rules={{ required: true }}
         render={({ field: { value, onChange } }) => (
           <TextField
+            label={'Пароль'}
+            placeholder='Введите пароль'
             value={value}
             onChange={(e) => onChange(e.target.value)}
-            type='password'
+            type={showPassword ? 'text' : 'password'}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position='start'>
+                  <Password />
+                </InputAdornment>
+              ),
+              endAdornment: (
+                <IconButton
+                  sx={{ mr: -1 }}
+                  onClick={() => setShowPassword((prev) => !prev)}
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              ),
+            }}
           />
         )}
       />
-
-      <Button
-        variant='contained'
-        type='submit'
-      >
-        Войти
-      </Button>
-    </Grid>
+    </FormLayout>
   );
 };

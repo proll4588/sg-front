@@ -16,12 +16,16 @@ interface UserContextType {
   isAuth: boolean;
   login: (login: string, password: string) => Promise<void>;
   logout: () => void;
+  isLoading: boolean;
+  error?: string;
 }
 
 const USER_CONTEXT_DEFAULT_VALUE: UserContextType = {
   isAuth: false,
   login: async () => {},
   logout: () => {},
+  isLoading: false,
+  error: undefined,
 };
 
 export const UserContext = createContext<UserContextType>(
@@ -31,7 +35,7 @@ export const UserContext = createContext<UserContextType>(
 export const useUser = () => useContext(UserContext);
 
 export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
-  const [loginUser, loginStatus] = useLazyQuery(LOGIN);
+  const [loginUser, { data, loading, error }] = useLazyQuery(LOGIN);
   const [isAuth, setIsAuth] = useState(!!tokenController.getToken());
 
   const login = async (login: string, password: string) => {
@@ -49,8 +53,8 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
   };
 
   useEffect(() => {
-    if (loginStatus.data) {
-      const t = loginStatus.data.login.token;
+    if (data) {
+      const t = data.login.token;
 
       if (!t) return;
 
@@ -58,10 +62,18 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
       client.setLink(getLink());
       setIsAuth(true);
     }
-  }, [loginStatus.data]);
+  }, [data]);
 
   return (
-    <UserContext.Provider value={{ isAuth, login, logout }}>
+    <UserContext.Provider
+      value={{
+        isAuth,
+        login,
+        logout,
+        isLoading: loading,
+        error: error?.message,
+      }}
+    >
       {children}
     </UserContext.Provider>
   );

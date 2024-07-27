@@ -52,6 +52,11 @@ import { createBreakpoints } from '@mui/system';
 //   A700: '#616161',
 // };
 
+const GREY_COLO2 = '#686868';
+// const GREY_COLOR = '#D9D9D9';
+const GREY_COLOR = GREY_COLO2;
+const CONTRAST_TEXT_GREY_COLOR = '#D9D9D9';
+
 const breakpoints = createBreakpoints({
   values: {
     xs: 0,
@@ -77,6 +82,11 @@ export const theme = createTheme({
     // },
     secondary: {
       main: '#69f0ae',
+    },
+    customGrey: {
+      main: GREY_COLOR,
+      dark: GREY_COLO2,
+      contrastText: CONTRAST_TEXT_GREY_COLOR,
     },
     // secondary: lime,
     // error: grey,
@@ -157,8 +167,22 @@ export const theme = createTheme({
   },
 });
 
+declare module '@mui/material/styles' {
+  interface Palette {
+    customGrey: Palette['primary'];
+  }
+
+  interface PaletteOptions {
+    customGrey?: PaletteOptions['primary'];
+  }
+}
+
 declare module '@mui/material/Button' {
   interface ButtonPropsVariantOverrides {
     action: true;
+  }
+
+  interface ButtonPropsColorOverrides {
+    customGrey: true;
   }
 }

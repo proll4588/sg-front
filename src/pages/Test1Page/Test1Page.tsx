@@ -112,8 +112,11 @@ export const Test1Page = () => {
   };
 
   const completeHandler = async () => {
-    await completeTest();
-    setCurrentQ(0);
+    if (selectedAns) {
+      await answerQuestion(currentQuestion.id, selectedAns);
+      await completeTest();
+      setCurrentQ(0);
+    }
   };
 
   // =================
@@ -192,7 +195,7 @@ export const Test1Page = () => {
 
         {isLastQuestion ? (
           <LoadingButton
-            loading={isCompleting}
+            loading={isCompleting || isAnswering}
             onClick={completeHandler}
             disabled={selectedAns === null}
             variant='contained'

@@ -113,10 +113,7 @@ export const Test1Page = () => {
 
   // =================
 
-  if (isLoadingQuestions || isLoadingTestOne)
-    return <Typography>Loading...</Typography>;
-
-  if (questions.length === 0) return <Typography>Упс</Typography>;
+  if (isLoadingTestOne) return <Typography>Loading...</Typography>;
 
   if (!currentQ)
     return (
@@ -127,6 +124,9 @@ export const Test1Page = () => {
         test={testOne}
       />
     );
+
+  if (isLoadingQuestions) return <Typography>Loading...</Typography>;
+  if (questions.length === 0) return <Typography>Упс</Typography>;
 
   return (
     <Grid

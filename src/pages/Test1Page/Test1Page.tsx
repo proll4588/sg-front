@@ -111,6 +111,11 @@ export const Test1Page = () => {
     }
   };
 
+  const completeHandler = async () => {
+    await completeTest();
+    setCurrentQ(0);
+  };
+
   // =================
 
   if (isLoadingTestOne) return <Typography>Loading...</Typography>;
@@ -188,7 +193,7 @@ export const Test1Page = () => {
         {isLastQuestion ? (
           <LoadingButton
             loading={isCompleting}
-            onClick={completeTest}
+            onClick={completeHandler}
             disabled={selectedAns === null}
             variant='contained'
           >

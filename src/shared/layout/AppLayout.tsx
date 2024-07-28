@@ -27,7 +27,6 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import MuiDrawer from '@mui/material/Drawer';
 import ListItemIcon from '@mui/material/ListItemIcon';
-import { PAGES_URLS } from '../router/constants';
 
 const drawerWidth = 240;
 

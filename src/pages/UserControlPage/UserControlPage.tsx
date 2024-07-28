@@ -63,7 +63,8 @@ export const UserControlPage = () => {
       /> */}
 
       <UsersTable
-        data={data?.getUsers || []}
+        // TODO: пофиксить схему
+        data={data?.getUsers?.filter((el) => el !== null) || []}
         fields={USERS_FIELDS_MAP}
         visibleFields={USERS_FIELDS_MAP}
         isLoading={loading}

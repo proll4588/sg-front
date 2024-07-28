@@ -79,7 +79,7 @@ export const UserForm: FC<UserFormProps> = ({
         name='role'
         render={({ field: { value, onChange } }) => (
           <Autocomplete
-            getOptionLabel={(op) => op.title}
+            getOptionLabel={(op) => op?.title || ''}
             value={value}
             onChange={(_, val) => onChange(val)}
             options={rolesRes?.getUsersRoles || []}

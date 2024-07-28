@@ -29,7 +29,7 @@ export const App = () => {
       {APP_NAVIGATION_MAP.filter((el) =>
         el.access.some((el2) => el2 === user?.Role.id)
       ).map((item) => (
-        <Card>
+        <Card key={item.title}>
           <CardActionArea onClick={() => navigate(item.url)}>
             <CardContent sx={{ display: 'flex', gap: 2 }}>
               {item.icon}

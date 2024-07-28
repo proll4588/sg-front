@@ -46,7 +46,11 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
     fetchPolicy: 'network-only',
   });
   const [isAuth, setIsAuth] = useState(!!tokenController.getToken());
-  const { data: userRes, refetch } = useQuery(GET_USER, { skip: !isAuth });
+  const {
+    data: userRes,
+    refetch,
+    loading: isLoadingUser,
+  } = useQuery(GET_USER, { skip: !isAuth });
 
   useEffect(() => {
     if (isAuth) refetch();
@@ -77,10 +81,10 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
   };
 
   const modules = useMemo(() => {
-    if (!userRes?.getUser) return [];
+    if (!userRes || !userRes.getUser) return [];
     else
       return APP_NAVIGATION_MAP.filter((el) =>
-        el.access.some((el2) => el2 === userRes.getUser.Role.id)
+        el.access.some((el2) => el2 === userRes.getUser!.Role.id)
       );
   }, [userRes?.getUser]);
 
@@ -90,7 +94,7 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
         isAuth,
         login,
         logout,
-        isLoading: loading,
+        isLoading: loading || isLoadingUser,
         error: error?.message,
         user: userRes?.getUser || null,
         modules,

@@ -124,3 +124,59 @@ export const COMPLETE_TEST_ONE = gql(`
   }
 }
   `);
+
+export const GET_TEST_ONE_BY_USER_ID = gql(`
+  query GetTestOne($userId: Int!) {
+  getTestOne(userId: $userId) {
+    startDate
+    id
+    endDate
+    complete
+    User {
+      id
+      login
+      Role {
+        id
+        title
+      }
+    }
+    TestOneAnswer {
+      answer
+      id
+      TestOneQuestions {
+        id
+        position
+        text
+      }
+    }
+  }
+}
+  `);
+
+export const ANS_TEST_ONE = gql(`
+  mutation AnsTestOne($processId: Int!, $ans: Int!, $questionId: Int!) {
+  ansTestOne(processId: $processId, ans: $ans, questionId: $questionId) {
+    id
+    complete
+    startDate
+    endDate
+    TestOneAnswer {
+      id
+      answer
+      TestOneQuestions {
+        id
+        text
+        position
+      }
+    }
+    User {
+      id
+      login
+      Role {
+        id
+        title
+      }
+    }
+  }
+}
+  `);

@@ -5,6 +5,7 @@ import { AppLayout } from '../layout/AppLayout';
 import { PAGES_URLS } from './constants';
 import { Test1Page } from '../../pages/Test1Page/Test1Page';
 import { Test2Page } from '../../pages/Test2Page/Test2Page';
+import { Test1PageProvider } from '../../pages/Test1Page/context/Test1PageContext';
 
 export const router = createBrowserRouter([
   {
@@ -21,7 +22,11 @@ export const router = createBrowserRouter([
       },
       {
         path: PAGES_URLS.test1,
-        element: <Test1Page />,
+        element: (
+          <Test1PageProvider>
+            <Test1Page />
+          </Test1PageProvider>
+        ),
       },
       {
         path: PAGES_URLS.test2,

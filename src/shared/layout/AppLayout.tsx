@@ -217,7 +217,7 @@ export const AppLayout: FC = ({}) => {
                   justifyContent: open ? 'initial' : 'center',
                   px: 2.5,
                 }}
-                onClick={() => navigate(PAGES_URLS.userControl)}
+                onClick={() => navigate(item.url)}
               >
                 <ListItemIcon
                   sx={{

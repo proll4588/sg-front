@@ -180,3 +180,125 @@ export const ANS_TEST_ONE = gql(`
   }
 }
   `);
+
+export const GET_TEST_TWO_QUESTIONS = gql(`
+  query GetTestTwoQuestions {
+  getTestTwoQuestions {
+    id
+    text
+    position
+  }
+}
+  `);
+
+export const GET_TEST_TWO_BY_USER_ID = gql(`
+  query GetTestTwo($userId: Int!) {
+  getTestTwo(userId: $userId) {
+    id
+    complete
+    startDate
+    endDate
+    TestTwoAnswer {
+      id
+      answer
+      TestTwoQuestions {
+        id
+        text
+        position
+      }
+    }
+    User {
+      id
+      login
+      Role {
+        id
+        title
+      }
+    }
+  }
+}
+  `);
+
+export const START_TEST_TWO = gql(`
+  mutation StartTestTwo($userId: Int!) {
+  startTestTwo(userId: $userId) {
+    id
+    complete
+    startDate
+    endDate
+    TestTwoAnswer {
+      id
+      answer
+      TestTwoQuestions {
+        id
+        text
+        position
+      }
+    }
+    User {
+      id
+      login
+      Role {
+        id
+        title
+      }
+    }
+  }
+}
+  `);
+
+export const ANS_TEST_TWO = gql(`
+  mutation AnsTestTwo($processId: Int!, $questionId: Int!, $ans: Boolean!) {
+  ansTestTwo(processId: $processId, questionId: $questionId, ans: $ans) {
+    id
+    complete
+    startDate
+    endDate
+    TestTwoAnswer {
+      id
+      answer
+      TestTwoQuestions {
+        id
+        text
+        position
+      }
+    }
+    User {
+      id
+      login
+      Role {
+        id
+        title
+      }
+    }
+  }
+}
+  `);
+
+export const COMPLETE_TEST_TWO = gql(`
+  mutation CompleteTestTwo($processId: Int!) {
+  completeTestTwo(processId: $processId) {
+    id
+    complete
+    startDate
+    endDate
+    TestTwoAnswer {
+      id
+      answer
+      TestTwoQuestions {
+        id
+        text
+        position
+      }
+    }
+    User {
+      id
+      login
+      Role {
+        id
+        title
+      }
+    }
+  }
+}
+  `);

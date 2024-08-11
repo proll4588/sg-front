@@ -302,3 +302,33 @@ export const COMPLETE_TEST_TWO = gql(`
   }
 }
   `);
+
+export const GET_ALL_TEST_ONE_RESULTS = gql(`
+  query GetTestOneResults {
+  getTestOneResults {
+    id
+    TestOneProcesses {
+      id
+      complete
+      startDate
+      endDate
+      User {
+        id
+        login
+      }
+    }
+    TestOneResultItem {
+      id
+      result
+      TestOneScale {
+        id
+        title
+      }
+      TestOneLevel {
+        id
+        title
+      }
+    }
+  }
+}
+  `);

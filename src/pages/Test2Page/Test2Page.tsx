@@ -95,7 +95,7 @@ export const Test2Page = () => {
   };
 
   const completeHandler = async () => {
-    if (selectedAns) {
+    if (selectedAns !== null) {
       await answerQuestion(currentQuestion.id, selectedAns);
       await completeTest();
       setCurrentQ(0);

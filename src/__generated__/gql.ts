@@ -15,7 +15,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
 const documents = {
     "\n  query Login($login: String!, $password: String!) {\n    login(login: $login, password: $password) {\n      token\n    }\n  }\n": types.LoginDocument,
     "\n  query GetUser {\n    getUser {\n      login\n      id\n      Role {\n        id\n        title\n      }\n    }\n  }\n": types.GetUserDocument,
-    "\n  query GetUsers($roleId: Int) {\n    getUsers(roleId: $roleId) {\n      id\n      login\n      Role {\n        id\n        title\n      }\n    }\n  }\n": types.GetUsersDocument,
+    "\n  query GetUsers {\n  getUsers {\n    id\n    login\n    Role {\n      id\n      title\n    }\n    Student {\n      Group {\n        id\n        title\n      }\n      name\n      passbookNumber\n    }\n  }\n}\n": types.GetUsersDocument,
     "\n  query GetUsersRoles {\n    getUsersRoles {\n      id\n      title\n    }\n  }\n": types.GetUsersRolesDocument,
     "\n  mutation Mutation($login: String!, $password: String!, $roleId: Int!) {\n    registration(login: $login, password: $password, roleId: $roleId) {\n      token\n    }\n  }\n": types.MutationDocument,
     "\n  mutation DeleteUser($userId: Int!) {\n    deleteUser(userId: $userId)\n  }\n": types.DeleteUserDocument,
@@ -30,6 +30,8 @@ const documents = {
     "\n  mutation AnsTestTwo($processId: Int!, $questionId: Int!, $ans: Boolean!) {\n  ansTestTwo(processId: $processId, questionId: $questionId, ans: $ans) {\n    id\n    complete\n    startDate\n    endDate\n    TestTwoAnswer {\n      id\n      answer\n      TestTwoQuestions {\n        id\n        text\n        position\n      }\n    }\n    User {\n      id\n      login\n      Role {\n        id\n        title\n      }\n    }\n  }\n}\n  ": types.AnsTestTwoDocument,
     "\n  mutation CompleteTestTwo($processId: Int!) {\n  completeTestTwo(processId: $processId) {\n    id\n    complete\n    startDate\n    endDate\n    TestTwoAnswer {\n      id\n      answer\n      TestTwoQuestions {\n        id\n        text\n        position\n      }\n    }\n    User {\n      id\n      login\n      Role {\n        id\n        title\n      }\n    }\n  }\n}\n  ": types.CompleteTestTwoDocument,
     "\n  query GetTestOneResults {\n  getTestOneResults {\n    id\n    TestOneProcesses {\n      id\n      complete\n      startDate\n      endDate\n      User {\n        id\n        login\n      }\n    }\n    TestOneResultItem {\n      id\n      result\n      TestOneScale {\n        id\n        title\n      }\n      TestOneLevel {\n        id\n        title\n      }\n    }\n  }\n}\n  ": types.GetTestOneResultsDocument,
+    "\n    mutation ProcessPdf($userId: Int!, $file: String!) {\n  processPdf(userId: $userId, file: $file)\n}\n    ": types.ProcessPdfDocument,
+    "\n  query GetStudentUsers {\n  getStudentUsers {\n    login\n    Student {\n      Group {\n        title\n        id\n      }\n      name\n      passbookNumber\n    }\n    id\n    Role {\n      id\n      title\n    }\n  }\n}\n  ": types.GetStudentUsersDocument,
 };
 
 /**
@@ -57,7 +59,7 @@ export function gql(source: "\n  query GetUser {\n    getUser {\n      login\n  
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  query GetUsers($roleId: Int) {\n    getUsers(roleId: $roleId) {\n      id\n      login\n      Role {\n        id\n        title\n      }\n    }\n  }\n"): (typeof documents)["\n  query GetUsers($roleId: Int) {\n    getUsers(roleId: $roleId) {\n      id\n      login\n      Role {\n        id\n        title\n      }\n    }\n  }\n"];
+export function gql(source: "\n  query GetUsers {\n  getUsers {\n    id\n    login\n    Role {\n      id\n      title\n    }\n    Student {\n      Group {\n        id\n        title\n      }\n      name\n      passbookNumber\n    }\n  }\n}\n"): (typeof documents)["\n  query GetUsers {\n  getUsers {\n    id\n    login\n    Role {\n      id\n      title\n    }\n    Student {\n      Group {\n        id\n        title\n      }\n      name\n      passbookNumber\n    }\n  }\n}\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -114,6 +116,14 @@ export function gql(source: "\n  mutation CompleteTestTwo($processId: Int!) {\n 
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  query GetTestOneResults {\n  getTestOneResults {\n    id\n    TestOneProcesses {\n      id\n      complete\n      startDate\n      endDate\n      User {\n        id\n        login\n      }\n    }\n    TestOneResultItem {\n      id\n      result\n      TestOneScale {\n        id\n        title\n      }\n      TestOneLevel {\n        id\n        title\n      }\n    }\n  }\n}\n  "): (typeof documents)["\n  query GetTestOneResults {\n  getTestOneResults {\n    id\n    TestOneProcesses {\n      id\n      complete\n      startDate\n      endDate\n      User {\n        id\n        login\n      }\n    }\n    TestOneResultItem {\n      id\n      result\n      TestOneScale {\n        id\n        title\n      }\n      TestOneLevel {\n        id\n        title\n      }\n    }\n  }\n}\n  "];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n    mutation ProcessPdf($userId: Int!, $file: String!) {\n  processPdf(userId: $userId, file: $file)\n}\n    "): (typeof documents)["\n    mutation ProcessPdf($userId: Int!, $file: String!) {\n  processPdf(userId: $userId, file: $file)\n}\n    "];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  query GetStudentUsers {\n  getStudentUsers {\n    login\n    Student {\n      Group {\n        title\n        id\n      }\n      name\n      passbookNumber\n    }\n    id\n    Role {\n      id\n      title\n    }\n  }\n}\n  "): (typeof documents)["\n  query GetStudentUsers {\n  getStudentUsers {\n    login\n    Student {\n      Group {\n        title\n        id\n      }\n      name\n      passbookNumber\n    }\n    id\n    Role {\n      id\n      title\n    }\n  }\n}\n  "];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};

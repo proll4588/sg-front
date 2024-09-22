@@ -1,4 +1,4 @@
-import { Group, Info, Quiz } from '@mui/icons-material';
+import { FileUpload, Group, Info, Quiz } from '@mui/icons-material';
 import { ReactNode } from 'react';
 
 export const PAGES_URLS = {
@@ -6,6 +6,7 @@ export const PAGES_URLS = {
   test1: 'test-1',
   test2: 'test-2',
   results: 'results',
+  test3: 'test-3',
 };
 
 export interface AppNavigationMapType {
@@ -39,5 +40,11 @@ export const APP_NAVIGATION_MAP: AppNavigationMapType[] = [
     access: [2],
     icon: <Quiz />,
     url: PAGES_URLS.test2,
+  },
+  {
+    title: 'Загрузка результатов 3 теста',
+    access: [3],
+    icon: <FileUpload />,
+    url: PAGES_URLS.test3,
   },
 ];

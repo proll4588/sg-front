@@ -24,16 +24,24 @@ export const GET_USER = gql(`
 `);
 
 export const GET_USERS = gql(`
-  query GetUsers($roleId: Int) {
-    getUsers(roleId: $roleId) {
+  query GetUsers {
+  getUsers {
+    id
+    login
+    Role {
       id
-      login
-      Role {
+      title
+    }
+    Student {
+      Group {
         id
         title
       }
+      name
+      passbookNumber
     }
   }
+}
 `);
 
 export const GET_USERS_ROLES = gql(`
@@ -328,6 +336,33 @@ export const GET_ALL_TEST_ONE_RESULTS = gql(`
         id
         title
       }
+    }
+  }
+}
+  `);
+
+export const PROCESS_PDF = gql(`
+    mutation ProcessPdf($userId: Int!, $file: String!) {
+  processPdf(userId: $userId, file: $file)
+}
+    `);
+
+export const GET_STUDENTS_USERS = gql(`
+  query GetStudentUsers {
+  getStudentUsers {
+    login
+    Student {
+      Group {
+        title
+        id
+      }
+      name
+      passbookNumber
+    }
+    id
+    Role {
+      id
+      title
     }
   }
 }

@@ -14,6 +14,7 @@ import { theme } from './widget/theme.ts';
 import { AuthPage } from './pages/AuthPage/AuthPage.tsx';
 import { router } from './shared/router/router.tsx';
 import { ConfirmProvider } from './shared/confirm/ConfirmContext.tsx';
+import { SnackbarProvider } from './shared/snackbar-helper/SnackbarContext.tsx';
 
 const AuthLayout = () => {
   const { isAuth } = useUser();
@@ -28,7 +29,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <UserProvider>
         <ThemeProvider theme={theme}>
           <ConfirmProvider>
-            <AuthLayout />
+            <SnackbarProvider>
+              <AuthLayout />
+            </SnackbarProvider>
           </ConfirmProvider>
         </ThemeProvider>
       </UserProvider>

@@ -15,7 +15,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
 const documents = {
     "\n  query Login($login: String!, $password: String!) {\n    login(login: $login, password: $password) {\n      token\n    }\n  }\n": types.LoginDocument,
     "\n  query GetUser {\n    getUser {\n      login\n      id\n      Role {\n        id\n        title\n      }\n    }\n  }\n": types.GetUserDocument,
-    "\n  query GetUsers {\n  getUsers {\n    id\n    login\n    Role {\n      id\n      title\n    }\n    Student {\n      Group {\n        id\n        title\n      }\n      name\n      passbookNumber\n    }\n  }\n}\n": types.GetUsersDocument,
+    "\n  query GetUsers($roleId: Int) {\n  getUsers(roleId: $roleId) {\n    id\n    login\n    Role {\n      id\n      title\n    }\n    Student {\n      Group {\n        id\n        title\n      }\n      name\n      passbookNumber\n    }\n  }\n}\n": types.GetUsersDocument,
     "\n  query GetUsersRoles {\n    getUsersRoles {\n      id\n      title\n    }\n  }\n": types.GetUsersRolesDocument,
     "\n  mutation Mutation($login: String!, $password: String!, $roleId: Int!) {\n    registration(login: $login, password: $password, roleId: $roleId) {\n      token\n    }\n  }\n": types.MutationDocument,
     "\n  mutation DeleteUser($userId: Int!) {\n    deleteUser(userId: $userId)\n  }\n": types.DeleteUserDocument,
@@ -59,7 +59,7 @@ export function gql(source: "\n  query GetUser {\n    getUser {\n      login\n  
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  query GetUsers {\n  getUsers {\n    id\n    login\n    Role {\n      id\n      title\n    }\n    Student {\n      Group {\n        id\n        title\n      }\n      name\n      passbookNumber\n    }\n  }\n}\n"): (typeof documents)["\n  query GetUsers {\n  getUsers {\n    id\n    login\n    Role {\n      id\n      title\n    }\n    Student {\n      Group {\n        id\n        title\n      }\n      name\n      passbookNumber\n    }\n  }\n}\n"];
+export function gql(source: "\n  query GetUsers($roleId: Int) {\n  getUsers(roleId: $roleId) {\n    id\n    login\n    Role {\n      id\n      title\n    }\n    Student {\n      Group {\n        id\n        title\n      }\n      name\n      passbookNumber\n    }\n  }\n}\n"): (typeof documents)["\n  query GetUsers($roleId: Int) {\n  getUsers(roleId: $roleId) {\n    id\n    login\n    Role {\n      id\n      title\n    }\n    Student {\n      Group {\n        id\n        title\n      }\n      name\n      passbookNumber\n    }\n  }\n}\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

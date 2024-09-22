@@ -24,8 +24,8 @@ export const GET_USER = gql(`
 `);
 
 export const GET_USERS = gql(`
-  query GetUsers {
-  getUsers {
+  query GetUsers($roleId: Int) {
+  getUsers(roleId: $roleId) {
     id
     login
     Role {

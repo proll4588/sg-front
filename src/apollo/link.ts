@@ -3,7 +3,7 @@ import { ApolloLink, concat } from '@apollo/client';
 import { createUploadLink } from 'apollo-upload-client';
 import { tokenController } from '../shared/token';
 
-const IP = 'localhost:4000';
+const IP = 'localhost:4000/graphql';
 // const IP = '151.248.115.92:4000';
 
 export const getLink = () => {

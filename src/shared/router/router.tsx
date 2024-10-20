@@ -9,6 +9,7 @@ import { Test1PageProvider } from '../../pages/Test1Page/context/Test1PageContex
 import { Test2PageProvider } from '../../pages/Test2Page/context/Test2PageContext';
 import { Test1Results } from '../../pages/Test1Results/Test1Results';
 import { LoadTest3 } from '../../pages/LoadTest3/LoadTest3';
+import { EmployeeListPage } from '../../pages/EmployeeListPage/EmployeeListPage';
 
 export const router = createBrowserRouter([
   {
@@ -46,6 +47,10 @@ export const router = createBrowserRouter([
       {
         path: PAGES_URLS.test3,
         element: <LoadTest3 />,
+      },
+      {
+        path: PAGES_URLS.employeeList,
+        element: <EmployeeListPage />,
       },
     ],
   },

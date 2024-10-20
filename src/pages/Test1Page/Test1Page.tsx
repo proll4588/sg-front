@@ -8,6 +8,7 @@ import {
 import { FC, useEffect, useMemo, useState } from 'react';
 import { useTest1 } from './context/Test1PageContext';
 import { LoadingButton } from '@mui/lab';
+import { CustomBackdrop } from '../../shared/ui/custom-backdrop';
 
 const useTestOneNavigation = (questionsSize: number, isSelected: boolean) => {
   const MAX = questionsSize;
@@ -121,7 +122,7 @@ export const Test1Page = () => {
 
   // =================
 
-  if (isLoadingTestOne) return <Typography>Loading...</Typography>;
+  if (isLoadingTestOne) return <CustomBackdrop isLoading />;
 
   if (!currentQ)
     return (
@@ -133,7 +134,7 @@ export const Test1Page = () => {
       />
     );
 
-  if (isLoadingQuestions) return <Typography>Loading...</Typography>;
+  if (isLoadingQuestions) return <CustomBackdrop isLoading />;
   if (questions.length === 0) return <Typography>Упс</Typography>;
 
   return (
@@ -178,6 +179,7 @@ export const Test1Page = () => {
         flexDirection={'row'}
         alignItems={'center'}
         justifyContent={'stretch'}
+        maxWidth={400}
       >
         <Button
           onClick={back}

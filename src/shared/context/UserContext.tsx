@@ -8,12 +8,13 @@ import {
   useState,
 } from 'react';
 import { tokenController } from '../token';
-import { useLazyQuery, useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { GET_USER, LOGIN } from '../../apollo/fetchs';
 import client from '../../apollo/client';
 import { getLink } from '../../apollo/link';
 import { User } from '../../widget/tables/users-table/type';
 import { APP_NAVIGATION_MAP, AppNavigationMapType } from '../router/constants';
+import { CustomBackdrop } from '../ui/custom-backdrop';
 
 interface UserContextType {
   isAuth: boolean;
@@ -42,7 +43,7 @@ export const UserContext = createContext<UserContextType>(
 export const useUser = () => useContext(UserContext);
 
 export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
-  const [loginUser, { loading, error }] = useLazyQuery(LOGIN, {
+  const [loginUser, { loading, error }] = useMutation(LOGIN, {
     fetchPolicy: 'network-only',
   });
   const [isAuth, setIsAuth] = useState(!!tokenController.getToken());
@@ -100,7 +101,8 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
         modules,
       }}
     >
-      {children}
+      <CustomBackdrop isLoading={isLoadingUser || loading} />
+      {!isLoadingUser && !loading && children}
     </UserContext.Provider>
   );
 };

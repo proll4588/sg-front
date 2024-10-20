@@ -3,11 +3,11 @@
 import { gql } from '../__generated__';
 
 export const LOGIN = gql(`
-  query Login($login: String!, $password: String!) {
-    login(login: $login, password: $password) {
-      token
-    }
+  mutation Login($login: String!, $password: String!) {
+  login(login: $login, password: $password) {
+    token
   }
+}
 `);
 
 export const GET_USER = gql(`
@@ -55,10 +55,10 @@ export const GET_USERS_ROLES = gql(`
 
 export const REGISTRATION = gql(`
   mutation Mutation($login: String!, $password: String!, $roleId: Int!) {
-    registration(login: $login, password: $password, roleId: $roleId) {
-      token
-    }
+  createUser(login: $login, password: $password, roleId: $roleId) {
+    id
   }
+}
 `);
 
 export const DELETE_USER = gql(`
@@ -134,8 +134,8 @@ export const COMPLETE_TEST_ONE = gql(`
   `);
 
 export const GET_TEST_ONE_BY_USER_ID = gql(`
-  query GetTestOne($userId: Int!) {
-  getTestOne(userId: $userId) {
+  query GetTestOneProcessByUserId($userId: Int!) {
+  getTestOneProcessByUserId(userId: $userId) {
     startDate
     id
     endDate
@@ -200,8 +200,8 @@ export const GET_TEST_TWO_QUESTIONS = gql(`
   `);
 
 export const GET_TEST_TWO_BY_USER_ID = gql(`
-  query GetTestTwo($userId: Int!) {
-  getTestTwo(userId: $userId) {
+  query GetTestTwoProcessByUserId($userId: Int!) {
+    getTestTwoProcessByUserId(userId: $userId) {
     id
     complete
     startDate

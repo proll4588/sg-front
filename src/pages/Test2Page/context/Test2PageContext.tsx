@@ -98,7 +98,7 @@ export const Test2PageProvider: FC<PropsWithChildren> = ({ children }) => {
     if (user) {
       const { data } = await getTestProcess({ variables: { userId: user.id } });
 
-      setTestProcess(data?.getTestTwo || null);
+      setTestProcess(data?.getTestTwoProcessByUserId || null);
     }
   };
   /* ===== */

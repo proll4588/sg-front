@@ -1,5 +1,13 @@
-import { FileUpload, Group, Info, Person, Quiz } from '@mui/icons-material';
+import {
+  Checklist,
+  FileUpload,
+  Group,
+  Info,
+  Person,
+  Quiz,
+} from '@mui/icons-material';
 import { ReactNode } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export const PAGES_URLS = {
   userControl: 'user-control',
@@ -8,6 +16,26 @@ export const PAGES_URLS = {
   results: 'results',
   test3: 'test-3',
   employeeList: 'employee-list',
+  employeeTestProcesses: 'employee-test-processes',
+  availableEmployeeTestProcesses: 'available-employee-test-processes',
+  startEmployeeTest: 'employee-test/start/:processId',
+  employeeTest: 'employee-test/:testId',
+};
+
+export const useNavigateToStartEmployeeTestPage = () => {
+  const navigate = useNavigate();
+
+  return (processId: number) => {
+    navigate(`/employee-test/start/${processId}`);
+  };
+};
+
+export const useNavigateToEmployeeTestPage = () => {
+  const navigate = useNavigate();
+
+  return (testId: number) => {
+    navigate(`/employee-test/${testId}`);
+  };
 };
 
 export interface AppNavigationMapType {
@@ -26,6 +54,18 @@ export enum Role {
 }
 
 export const APP_NAVIGATION_MAP: AppNavigationMapType[] = [
+  {
+    title: 'Процессы тестирования',
+    icon: <Checklist />,
+    url: PAGES_URLS.availableEmployeeTestProcesses,
+    access: [Role.Employee],
+  },
+  {
+    title: 'Процессы тестирования',
+    icon: <Checklist />,
+    url: PAGES_URLS.employeeTestProcesses,
+    access: [Role.Admin, Role.Organizer],
+  },
   {
     title: 'Сотрудники',
     icon: <Person />,

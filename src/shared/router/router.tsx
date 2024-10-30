@@ -10,6 +10,12 @@ import { Test2PageProvider } from '../../pages/Test2Page/context/Test2PageContex
 import { Test1Results } from '../../pages/Test1Results/Test1Results';
 import { LoadTest3 } from '../../pages/LoadTest3/LoadTest3';
 import { EmployeeListPage } from '../../pages/EmployeeListPage/EmployeeListPage';
+import { EmployeeTestListPage } from '../../pages/EmployeeTestListPage/EmployeeTestListPage';
+import { AvailableEmployeeTestProcesses } from '../../pages/AvailableEmployeeTestProcesses/AvailableEmployeeTestProcesses';
+import {
+  EmployeeTest,
+  StartEmployeeTestPage,
+} from '../../pages/EmployeeTest/EmployeeTest';
 
 export const router = createBrowserRouter([
   {
@@ -51,6 +57,22 @@ export const router = createBrowserRouter([
       {
         path: PAGES_URLS.employeeList,
         element: <EmployeeListPage />,
+      },
+      {
+        path: PAGES_URLS.employeeTestProcesses,
+        element: <EmployeeTestListPage />,
+      },
+      {
+        path: PAGES_URLS.availableEmployeeTestProcesses,
+        element: <AvailableEmployeeTestProcesses />,
+      },
+      {
+        path: PAGES_URLS.employeeTest,
+        element: <EmployeeTest />,
+      },
+      {
+        path: PAGES_URLS.startEmployeeTest,
+        element: <StartEmployeeTestPage />,
       },
     ],
   },

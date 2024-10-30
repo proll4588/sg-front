@@ -16,6 +16,11 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
+export type CompleteEmployeeTestAnswer = {
+  ans: Scalars['Int']['input'];
+  questionId: Scalars['Int']['input'];
+};
+
 export type Employee = {
   __typename?: 'Employee';
   EmploeePosition: EmployeePosition;
@@ -27,6 +32,55 @@ export type Employee = {
 
 export type EmployeePosition = {
   __typename?: 'EmployeePosition';
+  id: Scalars['Int']['output'];
+  title: Scalars['String']['output'];
+};
+
+export type EmployeeTest = {
+  __typename?: 'EmployeeTest';
+  Emplouee: Employee;
+  EmployeeTestAnswer: Array<EmployeeTestAnswer>;
+  EmployeeTestVariant: EmployeeTestVariant;
+  endDate?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
+  startDate: Scalars['String']['output'];
+};
+
+export type EmployeeTestAnswer = {
+  __typename?: 'EmployeeTestAnswer';
+  EmployeeTestQuestion: EmployeeTestQuestion;
+  answer: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
+};
+
+export type EmployeeTestProcess = {
+  __typename?: 'EmployeeTestProcess';
+  EmployeeTest?: Maybe<Array<EmployeeTest>>;
+  EmployeeTestVariant: EmployeeTestVariant;
+  EmplyeeProcessMembers: Array<EmployeeTestProcessMember>;
+  User: User;
+  endDate?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
+  startDate: Scalars['String']['output'];
+  title: Scalars['String']['output'];
+};
+
+export type EmployeeTestProcessMember = {
+  __typename?: 'EmployeeTestProcessMember';
+  Emplouee: Employee;
+  employeeTestProcessId: Scalars['Int']['output'];
+  id: Scalars['Int']['output'];
+};
+
+export type EmployeeTestQuestion = {
+  __typename?: 'EmployeeTestQuestion';
+  id: Scalars['Int']['output'];
+  position: Scalars['Int']['output'];
+  title: Scalars['String']['output'];
+};
+
+export type EmployeeTestVariant = {
+  __typename?: 'EmployeeTestVariant';
   id: Scalars['Int']['output'];
   title: Scalars['String']['output'];
 };
@@ -46,14 +100,19 @@ export type Mutation = {
   __typename?: 'Mutation';
   ansTestOne?: Maybe<TestOneProcess>;
   ansTestTwo?: Maybe<TestTwoProcess>;
+  answerEmployeeTest: Scalars['Boolean']['output'];
   completeTestOne?: Maybe<TestOneProcess>;
   completeTestTwo?: Maybe<TestTwoProcess>;
   createEmployee: Employee;
   createEmployeePosition: EmployeePosition;
+  createEmployeeTestProcess?: Maybe<EmployeeTestProcess>;
   createUser: User;
   deleteUser: Scalars['Boolean']['output'];
+  finishEmployeeTest: Scalars['Boolean']['output'];
+  finishEmployeeTestProcess: Scalars['Boolean']['output'];
   login?: Maybe<LoginResponse>;
   processPdf?: Maybe<Scalars['Boolean']['output']>;
+  startEmployeeTest?: Maybe<EmployeeTest>;
   startTestOne?: Maybe<TestOneProcess>;
   startTestTwo?: Maybe<TestTwoProcess>;
 };
@@ -70,6 +129,12 @@ export type MutationAnsTestTwoArgs = {
   ans: Scalars['Boolean']['input'];
   processId: Scalars['Int']['input'];
   questionId: Scalars['Int']['input'];
+};
+
+
+export type MutationAnswerEmployeeTestArgs = {
+  answers: Array<CompleteEmployeeTestAnswer>;
+  testId: Scalars['Int']['input'];
 };
 
 
@@ -97,6 +162,13 @@ export type MutationCreateEmployeePositionArgs = {
 };
 
 
+export type MutationCreateEmployeeTestProcessArgs = {
+  employeeIds: Array<Scalars['Int']['input']>;
+  testVariantId: Scalars['Int']['input'];
+  title: Scalars['String']['input'];
+};
+
+
 export type MutationCreateUserArgs = {
   login: Scalars['String']['input'];
   password: Scalars['String']['input'];
@@ -109,6 +181,16 @@ export type MutationDeleteUserArgs = {
 };
 
 
+export type MutationFinishEmployeeTestArgs = {
+  testId: Scalars['Int']['input'];
+};
+
+
+export type MutationFinishEmployeeTestProcessArgs = {
+  processId: Scalars['Int']['input'];
+};
+
+
 export type MutationLoginArgs = {
   login: Scalars['String']['input'];
   password: Scalars['String']['input'];
@@ -118,6 +200,11 @@ export type MutationLoginArgs = {
 export type MutationProcessPdfArgs = {
   file: Scalars['String']['input'];
   userId: Scalars['Int']['input'];
+};
+
+
+export type MutationStartEmployeeTestArgs = {
+  testProcessId: Scalars['Int']['input'];
 };
 
 
@@ -134,7 +221,14 @@ export type Query = {
   __typename?: 'Query';
   getAllTestOneProcess: Array<Maybe<TestOneProcess>>;
   getAllTestTwoProcess: Array<TestTwoProcess>;
+  getAvailableEmployeeTestProcesses: Array<EmployeeTestProcess>;
   getEmployeePositions: Array<EmployeePosition>;
+  getEmployeeTestById?: Maybe<EmployeeTest>;
+  getEmployeeTestByProcessId?: Maybe<EmployeeTest>;
+  getEmployeeTestProcessById?: Maybe<EmployeeTestProcess>;
+  getEmployeeTestProcesses: Array<EmployeeTestProcess>;
+  getEmployeeTestQuestions: Array<EmployeeTestQuestion>;
+  getEmployeeTestVariants: Array<EmployeeTestVariant>;
   getEmployees: Array<Employee>;
   getStudentUsers: Array<Maybe<User>>;
   getTestOneProcessByUserId?: Maybe<TestOneProcess>;
@@ -146,6 +240,26 @@ export type Query = {
   getUser?: Maybe<User>;
   getUsers: Array<Maybe<User>>;
   getUsersRoles: Array<Maybe<Role>>;
+};
+
+
+export type QueryGetEmployeeTestByIdArgs = {
+  testId: Scalars['Int']['input'];
+};
+
+
+export type QueryGetEmployeeTestByProcessIdArgs = {
+  processId: Scalars['Int']['input'];
+};
+
+
+export type QueryGetEmployeeTestProcessByIdArgs = {
+  processId: Scalars['Int']['input'];
+};
+
+
+export type QueryGetEmployeeTestQuestionsArgs = {
+  testId: Scalars['Int']['input'];
 };
 
 
@@ -431,6 +545,80 @@ export type CreateEmployeeMutationVariables = Exact<{
 
 export type CreateEmployeeMutation = { __typename?: 'Mutation', createEmployee: { __typename?: 'Employee', id: number, name: string, email: string, EmploeePosition: { __typename?: 'EmployeePosition', id: number, title: string }, User: { __typename?: 'User', id: number, login: string, Role: { __typename?: 'Role', id: number, title: string } } } };
 
+export type GetEmployeeTestProcessesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetEmployeeTestProcessesQuery = { __typename?: 'Query', getEmployeeTestProcesses: Array<{ __typename?: 'EmployeeTestProcess', title: string, startDate: string, id: number, endDate?: string | null, User: { __typename?: 'User', id: number, login: string, Role: { __typename?: 'Role', title: string, id: number } }, EmplyeeProcessMembers: Array<{ __typename?: 'EmployeeTestProcessMember', id: number, employeeTestProcessId: number, Emplouee: { __typename?: 'Employee', name: string, id: number, email: string, User: { __typename?: 'User', id: number, login: string, Role: { __typename?: 'Role', title: string, id: number } }, EmploeePosition: { __typename?: 'EmployeePosition', title: string, id: number } } }>, EmployeeTestVariant: { __typename?: 'EmployeeTestVariant', title: string, id: number }, EmployeeTest?: Array<{ __typename?: 'EmployeeTest', startDate: string, id: number, endDate?: string | null, Emplouee: { __typename?: 'Employee', name: string, id: number, email: string, User: { __typename?: 'User', login: string, id: number, Role: { __typename?: 'Role', id: number, title: string } }, EmploeePosition: { __typename?: 'EmployeePosition', id: number, title: string } }, EmployeeTestVariant: { __typename?: 'EmployeeTestVariant', id: number, title: string }, EmployeeTestAnswer: Array<{ __typename?: 'EmployeeTestAnswer', id: number, answer: string, EmployeeTestQuestion: { __typename?: 'EmployeeTestQuestion', id: number, title: string, position: number } }> }> | null }> };
+
+export type FinishEmployeeTestProcessMutationVariables = Exact<{
+  processId: Scalars['Int']['input'];
+}>;
+
+
+export type FinishEmployeeTestProcessMutation = { __typename?: 'Mutation', finishEmployeeTestProcess: boolean };
+
+export type GetEmployeeTestVariantsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetEmployeeTestVariantsQuery = { __typename?: 'Query', getEmployeeTestVariants: Array<{ __typename?: 'EmployeeTestVariant', title: string, id: number }> };
+
+export type CreateEmployeeTestProcessMutationVariables = Exact<{
+  employeeIds: Array<Scalars['Int']['input']> | Scalars['Int']['input'];
+  title: Scalars['String']['input'];
+  testVariantId: Scalars['Int']['input'];
+}>;
+
+
+export type CreateEmployeeTestProcessMutation = { __typename?: 'Mutation', createEmployeeTestProcess?: { __typename?: 'EmployeeTestProcess', title: string, startDate: string, id: number, endDate?: string | null, User: { __typename?: 'User', login: string, id: number, Role: { __typename?: 'Role', title: string, id: number } }, EmplyeeProcessMembers: Array<{ __typename?: 'EmployeeTestProcessMember', id: number, employeeTestProcessId: number, Emplouee: { __typename?: 'Employee', name: string, id: number, email: string, User: { __typename?: 'User', login: string, id: number, Role: { __typename?: 'Role', title: string, id: number } }, EmploeePosition: { __typename?: 'EmployeePosition', title: string, id: number } } }>, EmployeeTestVariant: { __typename?: 'EmployeeTestVariant', title: string, id: number } } | null };
+
+export type GetAvailableEmployeeTestProcessesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAvailableEmployeeTestProcessesQuery = { __typename?: 'Query', getAvailableEmployeeTestProcesses: Array<{ __typename?: 'EmployeeTestProcess', title: string, startDate: string, id: number, endDate?: string | null, EmployeeTest?: Array<{ __typename?: 'EmployeeTest', startDate: string, id: number, endDate?: string | null, EmployeeTestVariant: { __typename?: 'EmployeeTestVariant', title: string, id: number }, EmployeeTestAnswer: Array<{ __typename?: 'EmployeeTestAnswer', id: number, answer: string, EmployeeTestQuestion: { __typename?: 'EmployeeTestQuestion', id: number, title: string, position: number } }> }> | null, User: { __typename?: 'User', id: number, login: string, Role: { __typename?: 'Role', id: number, title: string } }, EmployeeTestVariant: { __typename?: 'EmployeeTestVariant', id: number, title: string }, EmplyeeProcessMembers: Array<{ __typename?: 'EmployeeTestProcessMember', id: number, employeeTestProcessId: number, Emplouee: { __typename?: 'Employee', id: number, name: string, email: string, EmploeePosition: { __typename?: 'EmployeePosition', id: number, title: string }, User: { __typename?: 'User', id: number, login: string, Role: { __typename?: 'Role', id: number, title: string } } } }> }> };
+
+export type GetEmployeeTestQuestionsQueryVariables = Exact<{
+  testId: Scalars['Int']['input'];
+}>;
+
+
+export type GetEmployeeTestQuestionsQuery = { __typename?: 'Query', getEmployeeTestQuestions: Array<{ __typename?: 'EmployeeTestQuestion', id: number, title: string, position: number }> };
+
+export type StartEmployeeTestMutationVariables = Exact<{
+  testProcessId: Scalars['Int']['input'];
+}>;
+
+
+export type StartEmployeeTestMutation = { __typename?: 'Mutation', startEmployeeTest?: { __typename?: 'EmployeeTest', startDate: string, id: number, endDate?: string | null, EmployeeTestVariant: { __typename?: 'EmployeeTestVariant', id: number, title: string } } | null };
+
+export type GetEmployeeTestProcessByIdQueryVariables = Exact<{
+  processId: Scalars['Int']['input'];
+}>;
+
+
+export type GetEmployeeTestProcessByIdQuery = { __typename?: 'Query', getEmployeeTestProcessById?: { __typename?: 'EmployeeTestProcess', title: string, startDate: string, id: number, endDate?: string | null, EmployeeTest?: Array<{ __typename?: 'EmployeeTest', startDate: string, id: number, endDate?: string | null, EmployeeTestVariant: { __typename?: 'EmployeeTestVariant', title: string, id: number }, EmployeeTestAnswer: Array<{ __typename?: 'EmployeeTestAnswer', id: number, answer: string, EmployeeTestQuestion: { __typename?: 'EmployeeTestQuestion', title: string, position: number, id: number } }> }> | null, EmployeeTestVariant: { __typename?: 'EmployeeTestVariant', title: string, id: number } } | null };
+
+export type GetEmployeeTestByProcessIdQueryVariables = Exact<{
+  processId: Scalars['Int']['input'];
+}>;
+
+
+export type GetEmployeeTestByProcessIdQuery = { __typename?: 'Query', getEmployeeTestByProcessId?: { __typename?: 'EmployeeTest', startDate: string, id: number, endDate?: string | null, EmployeeTestVariant: { __typename?: 'EmployeeTestVariant', title: string, id: number }, EmployeeTestAnswer: Array<{ __typename?: 'EmployeeTestAnswer', id: number, answer: string, EmployeeTestQuestion: { __typename?: 'EmployeeTestQuestion', title: string, position: number, id: number } }> } | null };
+
+export type GetEmployeeTestByIdQueryVariables = Exact<{
+  testId: Scalars['Int']['input'];
+}>;
+
+
+export type GetEmployeeTestByIdQuery = { __typename?: 'Query', getEmployeeTestById?: { __typename?: 'EmployeeTest', startDate: string, id: number, endDate?: string | null, EmployeeTestVariant: { __typename?: 'EmployeeTestVariant', title: string, id: number }, EmployeeTestAnswer: Array<{ __typename?: 'EmployeeTestAnswer', id: number, answer: string, EmployeeTestQuestion: { __typename?: 'EmployeeTestQuestion', id: number, title: string, position: number } }> } | null };
+
+export type AnswerEmployeeTestMutationVariables = Exact<{
+  testId: Scalars['Int']['input'];
+  answers: Array<CompleteEmployeeTestAnswer> | CompleteEmployeeTestAnswer;
+}>;
+
+
+export type AnswerEmployeeTestMutation = { __typename?: 'Mutation', answerEmployeeTest: boolean };
+
 
 export const LoginDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"Login"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"login"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"password"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"login"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"login"},"value":{"kind":"Variable","name":{"kind":"Name","value":"login"}}},{"kind":"Argument","name":{"kind":"Name","value":"password"},"value":{"kind":"Variable","name":{"kind":"Name","value":"password"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"token"}}]}}]}}]} as unknown as DocumentNode<LoginMutation, LoginMutationVariables>;
 export const GetUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getUser"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"login"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"Role"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}}]}}]}}]}}]} as unknown as DocumentNode<GetUserQuery, GetUserQueryVariables>;
@@ -455,3 +643,14 @@ export const GetEmployeePositionsDocument = {"kind":"Document","definitions":[{"
 export const GetEmployeesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetEmployees"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getEmployees"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"EmploeePosition"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}}]}},{"kind":"Field","name":{"kind":"Name","value":"User"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"login"}},{"kind":"Field","name":{"kind":"Name","value":"Role"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]} as unknown as DocumentNode<GetEmployeesQuery, GetEmployeesQueryVariables>;
 export const CreateEmployeePositionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateEmployeePosition"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"title"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createEmployeePosition"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"title"},"value":{"kind":"Variable","name":{"kind":"Name","value":"title"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}}]}}]}}]} as unknown as DocumentNode<CreateEmployeePositionMutation, CreateEmployeePositionMutationVariables>;
 export const CreateEmployeeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateEmployee"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"login"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"password"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"positionId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"email"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createEmployee"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"login"},"value":{"kind":"Variable","name":{"kind":"Name","value":"login"}}},{"kind":"Argument","name":{"kind":"Name","value":"password"},"value":{"kind":"Variable","name":{"kind":"Name","value":"password"}}},{"kind":"Argument","name":{"kind":"Name","value":"positionId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"positionId"}}},{"kind":"Argument","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name"}}},{"kind":"Argument","name":{"kind":"Name","value":"email"},"value":{"kind":"Variable","name":{"kind":"Name","value":"email"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"EmploeePosition"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}}]}},{"kind":"Field","name":{"kind":"Name","value":"User"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"login"}},{"kind":"Field","name":{"kind":"Name","value":"Role"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]} as unknown as DocumentNode<CreateEmployeeMutation, CreateEmployeeMutationVariables>;
+export const GetEmployeeTestProcessesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetEmployeeTestProcesses"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getEmployeeTestProcesses"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}},{"kind":"Field","name":{"kind":"Name","value":"User"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"login"}},{"kind":"Field","name":{"kind":"Name","value":"Role"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"EmplyeeProcessMembers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"employeeTestProcessId"}},{"kind":"Field","name":{"kind":"Name","value":"Emplouee"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"User"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"login"}},{"kind":"Field","name":{"kind":"Name","value":"Role"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"EmploeePosition"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"EmployeeTestVariant"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"EmployeeTest"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}},{"kind":"Field","name":{"kind":"Name","value":"Emplouee"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"User"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"login"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"Role"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"EmploeePosition"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"EmployeeTestVariant"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}}]}},{"kind":"Field","name":{"kind":"Name","value":"EmployeeTestAnswer"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"answer"}},{"kind":"Field","name":{"kind":"Name","value":"EmployeeTestQuestion"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"position"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetEmployeeTestProcessesQuery, GetEmployeeTestProcessesQueryVariables>;
+export const FinishEmployeeTestProcessDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"FinishEmployeeTestProcess"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"processId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"finishEmployeeTestProcess"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"processId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"processId"}}}]}]}}]} as unknown as DocumentNode<FinishEmployeeTestProcessMutation, FinishEmployeeTestProcessMutationVariables>;
+export const GetEmployeeTestVariantsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetEmployeeTestVariants"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getEmployeeTestVariants"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<GetEmployeeTestVariantsQuery, GetEmployeeTestVariantsQueryVariables>;
+export const CreateEmployeeTestProcessDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateEmployeeTestProcess"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"employeeIds"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"title"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"testVariantId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createEmployeeTestProcess"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"employeeIds"},"value":{"kind":"Variable","name":{"kind":"Name","value":"employeeIds"}}},{"kind":"Argument","name":{"kind":"Name","value":"title"},"value":{"kind":"Variable","name":{"kind":"Name","value":"title"}}},{"kind":"Argument","name":{"kind":"Name","value":"testVariantId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"testVariantId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}},{"kind":"Field","name":{"kind":"Name","value":"User"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"login"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"Role"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"EmplyeeProcessMembers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"employeeTestProcessId"}},{"kind":"Field","name":{"kind":"Name","value":"Emplouee"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"User"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"login"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"Role"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"EmploeePosition"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"EmployeeTestVariant"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<CreateEmployeeTestProcessMutation, CreateEmployeeTestProcessMutationVariables>;
+export const GetAvailableEmployeeTestProcessesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetAvailableEmployeeTestProcesses"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getAvailableEmployeeTestProcesses"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}},{"kind":"Field","name":{"kind":"Name","value":"EmployeeTest"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}},{"kind":"Field","name":{"kind":"Name","value":"EmployeeTestVariant"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"EmployeeTestAnswer"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"answer"}},{"kind":"Field","name":{"kind":"Name","value":"EmployeeTestQuestion"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"position"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"User"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"login"}},{"kind":"Field","name":{"kind":"Name","value":"Role"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"EmployeeTestVariant"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}}]}},{"kind":"Field","name":{"kind":"Name","value":"EmplyeeProcessMembers"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"employeeTestProcessId"}},{"kind":"Field","name":{"kind":"Name","value":"Emplouee"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"EmploeePosition"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}}]}},{"kind":"Field","name":{"kind":"Name","value":"User"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"login"}},{"kind":"Field","name":{"kind":"Name","value":"Role"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetAvailableEmployeeTestProcessesQuery, GetAvailableEmployeeTestProcessesQueryVariables>;
+export const GetEmployeeTestQuestionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetEmployeeTestQuestions"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"testId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getEmployeeTestQuestions"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"testId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"testId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"position"}}]}}]}}]} as unknown as DocumentNode<GetEmployeeTestQuestionsQuery, GetEmployeeTestQuestionsQueryVariables>;
+export const StartEmployeeTestDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"StartEmployeeTest"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"testProcessId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"startEmployeeTest"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"testProcessId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"testProcessId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}},{"kind":"Field","name":{"kind":"Name","value":"EmployeeTestVariant"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}}]}}]}}]}}]} as unknown as DocumentNode<StartEmployeeTestMutation, StartEmployeeTestMutationVariables>;
+export const GetEmployeeTestProcessByIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetEmployeeTestProcessById"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"processId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getEmployeeTestProcessById"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"processId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"processId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}},{"kind":"Field","name":{"kind":"Name","value":"EmployeeTest"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}},{"kind":"Field","name":{"kind":"Name","value":"EmployeeTestVariant"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"EmployeeTestAnswer"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"answer"}},{"kind":"Field","name":{"kind":"Name","value":"EmployeeTestQuestion"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"position"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"EmployeeTestVariant"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<GetEmployeeTestProcessByIdQuery, GetEmployeeTestProcessByIdQueryVariables>;
+export const GetEmployeeTestByProcessIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetEmployeeTestByProcessId"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"processId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getEmployeeTestByProcessId"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"processId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"processId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}},{"kind":"Field","name":{"kind":"Name","value":"EmployeeTestVariant"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"EmployeeTestAnswer"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"answer"}},{"kind":"Field","name":{"kind":"Name","value":"EmployeeTestQuestion"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"position"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetEmployeeTestByProcessIdQuery, GetEmployeeTestByProcessIdQueryVariables>;
+export const GetEmployeeTestByIdDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetEmployeeTestById"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"testId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getEmployeeTestById"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"testId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"testId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}},{"kind":"Field","name":{"kind":"Name","value":"EmployeeTestVariant"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"Field","name":{"kind":"Name","value":"EmployeeTestAnswer"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"answer"}},{"kind":"Field","name":{"kind":"Name","value":"EmployeeTestQuestion"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"position"}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetEmployeeTestByIdQuery, GetEmployeeTestByIdQueryVariables>;
+export const AnswerEmployeeTestDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"AnswerEmployeeTest"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"testId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"answers"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CompleteEmployeeTestAnswer"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"answerEmployeeTest"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"testId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"testId"}}},{"kind":"Argument","name":{"kind":"Name","value":"answers"},"value":{"kind":"Variable","name":{"kind":"Name","value":"answers"}}}]}]}}]} as unknown as DocumentNode<AnswerEmployeeTestMutation, AnswerEmployeeTestMutationVariables>;

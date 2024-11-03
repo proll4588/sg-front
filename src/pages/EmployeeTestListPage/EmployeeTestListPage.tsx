@@ -15,8 +15,11 @@ import {
   EmployeeTestFormFields,
 } from '../../widget/forms/employee-test-form/EmployeeTestForm';
 import { EmployeeTestTableActions } from '../../widget/tables/employee-test-table/actions/EmployeeTestTableActions';
+import { useNavigateToEmployeeTestResultsPage } from '../../shared/router/constants';
 
 export const EmployeeTestListPage = () => {
+  const navigateToEmployeeTestResultsPage =
+    useNavigateToEmployeeTestResultsPage();
   const { open, close, isOpen } = useViewModal();
   const { data, loading } = useQuery(GET_EMPLOYEE_TEST_PROCESSES);
   const [createEmployeeTest, { loading: createEmployeeTestLoading }] =
@@ -77,6 +80,9 @@ export const EmployeeTestListPage = () => {
           )}
           isLoading={loading}
           isUpdate={loading || finishEmployeeTestLoading}
+          onClick={(res) => {
+            navigateToEmployeeTestResultsPage(res.id);
+          }}
         />
       </Grid>
       <CreateEmployeeTestDialog

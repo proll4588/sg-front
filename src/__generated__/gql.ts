@@ -47,6 +47,7 @@ const documents = {
     "\n    query GetEmployeeTestByProcessId($processId: Int!) {\n      getEmployeeTestByProcessId(processId: $processId) {\n        startDate\n        id\n        endDate\n        EmployeeTestVariant {\n          title\n          id\n        }\n        EmployeeTestAnswer {\n          id\n          answer\n          EmployeeTestQuestion {\n            title\n            position\n            id\n          }\n        }\n      }\n    }\n": types.GetEmployeeTestByProcessIdDocument,
     "\n    query GetEmployeeTestById($testId: Int!) {\n      getEmployeeTestById(testId: $testId) {\n        startDate\n        id\n        endDate\n        EmployeeTestVariant {\n          title\n          id\n        }\n        EmployeeTestAnswer {\n          id\n          answer\n          EmployeeTestQuestion {\n            id\n            title\n            position\n          }\n        }\n      }\n    }\n": types.GetEmployeeTestByIdDocument,
     "\n    mutation AnswerEmployeeTest($testId: Int!, $answers: [CompleteEmployeeTestAnswer!]!) {\n      answerEmployeeTest(testId: $testId, answers: $answers)\n    }\n": types.AnswerEmployeeTestDocument,
+    "\n    query GetEmployeeTestProcessResults($processId: Int!) {\n        getEmployeeTestProcessResults(processId: $processId) {\n            title\n            value\n        }\n    }\n": types.GetEmployeeTestProcessResultsDocument,
 };
 
 /**
@@ -199,6 +200,10 @@ export function gql(source: "\n    query GetEmployeeTestById($testId: Int!) {\n 
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n    mutation AnswerEmployeeTest($testId: Int!, $answers: [CompleteEmployeeTestAnswer!]!) {\n      answerEmployeeTest(testId: $testId, answers: $answers)\n    }\n"): (typeof documents)["\n    mutation AnswerEmployeeTest($testId: Int!, $answers: [CompleteEmployeeTestAnswer!]!) {\n      answerEmployeeTest(testId: $testId, answers: $answers)\n    }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n    query GetEmployeeTestProcessResults($processId: Int!) {\n        getEmployeeTestProcessResults(processId: $processId) {\n            title\n            value\n        }\n    }\n"): (typeof documents)["\n    query GetEmployeeTestProcessResults($processId: Int!) {\n        getEmployeeTestProcessResults(processId: $processId) {\n            title\n            value\n        }\n    }\n"];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};

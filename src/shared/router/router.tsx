@@ -16,6 +16,7 @@ import {
   EmployeeTest,
   StartEmployeeTestPage,
 } from '../../pages/EmployeeTest/EmployeeTest';
+import { EmployeeTestProcessResultPage } from '../../pages/EmployeeTestProcessResultPage/EmployeeTestProcessResultPage';
 
 export const router = createBrowserRouter([
   {
@@ -73,6 +74,10 @@ export const router = createBrowserRouter([
       {
         path: PAGES_URLS.startEmployeeTest,
         element: <StartEmployeeTestPage />,
+      },
+      {
+        path: PAGES_URLS.employeeTestResults,
+        element: <EmployeeTestProcessResultPage />,
       },
     ],
   },

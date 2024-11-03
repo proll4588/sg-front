@@ -20,6 +20,15 @@ export const PAGES_URLS = {
   availableEmployeeTestProcesses: 'available-employee-test-processes',
   startEmployeeTest: 'employee-test/start/:processId',
   employeeTest: 'employee-test/:testId',
+  employeeTestResults: 'employee-test-results/:processId',
+};
+
+export const useNavigateToEmployeeTestResultsPage = () => {
+  const navigate = useNavigate();
+
+  return (processId: number) => {
+    navigate(`/employee-test-results/${processId}`);
+  };
 };
 
 export const useNavigateToStartEmployeeTestPage = () => {

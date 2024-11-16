@@ -1,12 +1,14 @@
-import { Autocomplete, Grid, TextField, Typography } from '@mui/material';
-import { useEffect, useState } from 'react';
-import { User } from '../../__generated__/graphql';
-import { useMutation, useQuery } from '@apollo/client';
-import { GET_STUDENTS_USERS, PROCESS_PDF } from '../../apollo/fetchs';
-import { UploadButton } from '../../shared/ui/upload-button/UploadButton';
+import { useMutation } from '@apollo/client';
 import { AttachFile, UploadFile } from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
+import { Grid, Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { ANSWER_STUDENT_TEST_THREE } from '../../apollo/fetchs/studentTest';
 import { useSnackbar } from '../../shared/snackbar-helper/SnackbarContext';
+import { UploadButton } from '../../shared/ui/upload-button/UploadButton';
+import { GET_AVAILABLE_STUDENT_TEST_PROCESSES } from '../../apollo/fetchs/studentTestProcess';
+import { PAGES_URLS } from '../../shared/router/constants';
 
 const toBase64 = (file: File) =>
   new Promise<string>((resolve, reject) => {
@@ -16,16 +18,16 @@ const toBase64 = (file: File) =>
     reader.onerror = reject;
   });
 
-const getStudentName = (user: User | null) => {
-  if (!user || !user.Student) return '~undef~';
+export const StudentTestThreePage = () => {
+  const { studentTestId } = useParams();
+  const navigate = useNavigate();
 
-  return `${user.Student.name} (${user.Student.Group.title})`;
-};
-
-export const LoadTest3 = () => {
   const { open: openSnackbar } = useSnackbar();
-  const [processPdf, { loading, error }] = useMutation(PROCESS_PDF);
-  const { data } = useQuery(GET_STUDENTS_USERS);
+
+  // TODO: сделать инвалидацию процессов
+  const [answer, { loading, error }] = useMutation(ANSWER_STUDENT_TEST_THREE, {
+    refetchQueries: [{ query: GET_AVAILABLE_STUDENT_TEST_PROCESSES }],
+  });
 
   useEffect(() => {
     if (error)
@@ -36,11 +38,8 @@ export const LoadTest3 = () => {
       });
   }, [error]);
 
-  const users = data?.getStudentUsers;
-
   const [file, setFile] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
-  const [user, setUser] = useState<User | null>(null);
 
   const addFiles = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.currentTarget.files && e.currentTarget.files.length > 0) {
@@ -52,12 +51,16 @@ export const LoadTest3 = () => {
   };
 
   const upload = () => {
-    if (file && user) {
-      processPdf({
+    // TODO: После отпрваки данных отправить студента отбратно на страницу тестов
+    // А если он сюда опять придёт, показывать что всё загрузилось)
+    if (file && studentTestId) {
+      answer({
         variables: {
-          file,
-          userId: user.id,
+          fileBase64: file,
+          studentTestId: Number(studentTestId),
         },
+      }).then(() => {
+        navigate(PAGES_URLS.studentTestProcessList);
       });
     }
   };
@@ -81,19 +84,6 @@ export const LoadTest3 = () => {
         >
           Загрузка результата тестирования
         </Typography>
-
-        <Autocomplete
-          options={users || []}
-          value={user}
-          onChange={(_, val) => setUser(val)}
-          getOptionLabel={getStudentName}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label='Студент'
-            />
-          )}
-        />
 
         <Grid
           container
@@ -119,22 +109,12 @@ export const LoadTest3 = () => {
           color='success'
           variant='outlined'
           loading={loading}
-          disabled={!file || !user}
+          disabled={!file || !studentTestId}
           onClick={upload}
           startIcon={<UploadFile />}
         >
           Загрузить
         </LoadingButton>
-
-        {/* <Typography
-        sx={{
-          // width: '100vw',
-          lineBreak: 'normal',
-          wordBreak: 'break-all',
-        }}
-      >
-        {file}
-      </Typography> */}
       </Grid>
     </Grid>
   );

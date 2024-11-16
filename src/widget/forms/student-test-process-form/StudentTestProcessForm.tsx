@@ -1,43 +1,44 @@
 import { useQuery } from '@apollo/client';
 import { FC, ReactNode } from 'react';
 import { Controller, useForm, UseFormHandleSubmit } from 'react-hook-form';
-import { GET_EMPLOYEE_TEST_VARIANTS } from '../../../apollo/fetchs/employeeTest';
-import { GET_EMPLOYEES } from '../../../apollo/fetchs/employee';
+import { GET_STUDENT_TEST_VARIANTS } from '../../../apollo/fetchs/studentTest';
+import { GET_STUDENTS } from '../../../apollo/fetchs/student';
 import { FormLayout } from '../../../shared/ui/form/form-layout';
 import { Autocomplete, Button, TextField } from '@mui/material';
 import { DialogForForm } from '../../../shared/ui/form/dialog-for-form';
 import { DialogTitleForForm } from '../../../shared/ui/form/dialog-for-form/components';
 import { LoadingButton } from '@mui/lab';
 
-export interface EmployeeTestFormFields {
+export interface StudentTestProcessFormFields {
   title: string;
-  variantId: number;
-  employeeIds: number[];
+  studentTestVariantId: number;
+  passbookNumbers: number[];
 }
-export interface EmployeeTestFormProps {
-  initValue?: Partial<EmployeeTestFormFields>;
-  onSubmit: (form: EmployeeTestFormFields) => void;
+
+interface StudentTestProcessFormProps {
+  initValue?: Partial<StudentTestProcessFormFields>;
+  onSubmit: (form: StudentTestProcessFormFields) => void;
   isLoading?: boolean;
   renderFormActions: (
-    handleSubmit: UseFormHandleSubmit<EmployeeTestFormFields>
+    handleSubmit: UseFormHandleSubmit<StudentTestProcessFormFields>
   ) => ReactNode;
 }
 
-export const EmployeeTestForm: FC<EmployeeTestFormProps> = ({
-  isLoading,
+export const StudentTestProcessForm: FC<StudentTestProcessFormProps> = ({
   initValue,
   onSubmit,
+  isLoading,
   renderFormActions,
 }) => {
-  const { control, handleSubmit } = useForm<EmployeeTestFormFields>({
+  const { control, handleSubmit } = useForm<StudentTestProcessFormFields>({
     defaultValues: initValue,
   });
 
-  const { data: variantData } = useQuery(GET_EMPLOYEE_TEST_VARIANTS);
-  const { data: employeeData } = useQuery(GET_EMPLOYEES);
+  const { data: variantData } = useQuery(GET_STUDENT_TEST_VARIANTS);
+  const { data: studentData } = useQuery(GET_STUDENTS);
 
-  const variants = variantData?.getEmployeeTestVariants;
-  const employees = employeeData?.getEmployees;
+  const variants = variantData?.getStudentTestVariants;
+  const students = studentData?.getStudents;
 
   return (
     <FormLayout
@@ -53,8 +54,8 @@ export const EmployeeTestForm: FC<EmployeeTestFormProps> = ({
             disabled={disabled}
             value={value}
             onChange={(e) => onChange(e.target.value)}
-            placeholder='Введите название тестирования'
-            label='Название тестирования'
+            placeholder='Введите название процесса тестирования'
+            label='Название процесса тестирования'
             required
           />
         )}
@@ -62,7 +63,7 @@ export const EmployeeTestForm: FC<EmployeeTestFormProps> = ({
 
       <Controller
         control={control}
-        name='variantId'
+        name='studentTestVariantId'
         disabled={isLoading}
         render={({ field: { onChange, value, disabled } }) => (
           <Autocomplete
@@ -86,23 +87,26 @@ export const EmployeeTestForm: FC<EmployeeTestFormProps> = ({
 
       <Controller
         control={control}
-        name='employeeIds'
+        name='passbookNumbers'
         disabled={isLoading}
         render={({ field: { onChange, value, disabled } }) => (
           <Autocomplete
             multiple
             disabled={disabled}
-            options={employees || []}
-            onChange={(_, value) => onChange(value?.map((v) => v.id) || [])}
+            options={students || []}
+            onChange={(_, value) =>
+              onChange(value?.map((v) => v.passbookNumber) || [])
+            }
             value={
-              employees?.filter(
-                (employee) => !!value?.some((val) => val === employee.id)
+              students?.filter(
+                (student) =>
+                  !!value?.some((val) => val === student.passbookNumber)
               ) || []
             }
             getOptionLabel={(option) =>
-              `${option.name} (${option.EmployeePosition.title})`
+              `${option.name} (${option.Group.title})`
             }
-            getOptionKey={(option) => option.id.toString()}
+            getOptionKey={(option) => option.passbookNumber.toString()}
             ChipProps={{ size: 'small' }}
             renderInput={(params) => (
               <TextField
@@ -118,27 +122,24 @@ export const EmployeeTestForm: FC<EmployeeTestFormProps> = ({
   );
 };
 
-interface CreateEmployeeTestDialogProps {
+export interface CreateStudentTestProcessDialogProps {
   isOpen: boolean;
   onClose: () => void;
   isLoading?: boolean;
-  initValue?: Partial<EmployeeTestFormFields>;
-  onSubmit: (form: EmployeeTestFormFields) => void;
+  initValue?: Partial<StudentTestProcessFormFields>;
+  onSubmit: (form: StudentTestProcessFormFields) => void;
 }
-export const CreateEmployeeTestDialog: FC<CreateEmployeeTestDialogProps> = ({
-  isOpen,
-  onClose,
-  isLoading = false,
-  initValue,
-  onSubmit,
-}) => {
+
+export const CreateStudentTestProcessDialog: FC<
+  CreateStudentTestProcessDialogProps
+> = ({ isOpen, onClose, isLoading, initValue, onSubmit }) => {
   return (
     <DialogForForm
-      head={<DialogTitleForForm title='Создание тестирования' />}
+      head={<DialogTitleForForm title='Создание процесса тестирования' />}
       open={isOpen}
       onClose={onClose}
     >
-      <EmployeeTestForm
+      <StudentTestProcessForm
         isLoading={isLoading}
         initValue={initValue}
         onSubmit={onSubmit}

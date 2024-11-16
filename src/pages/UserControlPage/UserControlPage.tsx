@@ -2,23 +2,19 @@ import { Button, Grid } from '@mui/material';
 import { UiSearchBar } from '../../shared/ui/ui-search-bar';
 import { Add } from '@mui/icons-material';
 import { useMutation, useQuery } from '@apollo/client';
-import { DELETE_USER, GET_USERS } from '../../apollo/fetchs';
 import { UsersTable } from '../../widget/tables/users-table/UsersTable';
 import { USERS_FIELDS_MAP } from '../../widget/tables/users-table/constants';
 import { useViewModal } from '../../shared/hooks/useViewModal';
 import { CreateUserFormDialog } from '../../widget/forms/UserForm/UserForm';
 import { UsersTableActions } from '../../widget/tables/users-table/actions/UsersTableActions';
 import { useConfirm } from '../../shared/confirm/ConfirmContext';
+import { DELETE_USER, GET_USERS } from '../../apollo/fetchs/user';
 
 export const UserControlPage = () => {
   const confirm = useConfirm();
   const { close, isOpen, open } = useViewModal();
-  // const [role, setRole] = useState<null | { id: number; title: string }>(null);
 
-  // const { data: rolesRes, loading: loadingRoles } = useQuery(GET_USERS_ROLES);
-  const { data, loading } = useQuery(GET_USERS, {
-    variables: { roleId: null },
-  });
+  const { data, loading } = useQuery(GET_USERS);
   const [deleteUser] = useMutation(DELETE_USER, {
     refetchQueries: [{ query: GET_USERS, variables: { roleId: null } }],
   });

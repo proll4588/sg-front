@@ -9,7 +9,7 @@ import {
 } from 'react';
 import { tokenController } from '../token';
 import { useMutation, useQuery } from '@apollo/client';
-import { GET_USER, LOGIN } from '../../apollo/fetchs';
+import { GET_USER, LOGIN } from '../../apollo/fetchs/user';
 import client from '../../apollo/client';
 import { getLink } from '../../apollo/link';
 import { User } from '../../widget/tables/users-table/type';

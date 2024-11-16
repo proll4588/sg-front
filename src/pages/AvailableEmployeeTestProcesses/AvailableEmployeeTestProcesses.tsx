@@ -1,21 +1,12 @@
 import { useQuery } from '@apollo/client';
 import { GET_AVAILABLE_EMPLOYEE_TEST_PROCESSES } from '../../apollo/fetchs/employeeTest';
 import { CustomBackdrop } from '../../shared/ui/custom-backdrop';
-import {
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  Chip,
-  Grid,
-  Typography,
-} from '@mui/material';
-import { FC } from 'react';
-import { Check, Close, HourglassEmpty } from '@mui/icons-material';
+import { Grid, Typography } from '@mui/material';
 import {
   useNavigateToStartEmployeeTestPage,
   useNavigateToEmployeeTestPage,
 } from '../../shared/router/constants';
+import { TestProcessCard } from '../../feature/TestProcessCard/TestProcessCard';
 
 export const AvailableEmployeeTestProcesses = () => {
   const { data, loading } = useQuery(GET_AVAILABLE_EMPLOYEE_TEST_PROCESSES);
@@ -67,80 +58,5 @@ export const AvailableEmployeeTestProcesses = () => {
         );
       })}
     </Grid>
-  );
-};
-
-interface TestProcessCardProps {
-  title: string;
-  testVariant: string;
-  isInProcess: boolean;
-  isComplete: boolean;
-  onStartTest?: () => void;
-  onContinueTest?: () => void;
-}
-
-const getChipLabel = (isInProcess: boolean, isComplete: boolean) => {
-  if (isInProcess) return 'Тест в процессе';
-  if (isComplete) return 'Тест пройден';
-  return 'Тест не пройден';
-};
-
-const getChipColor = (isInProcess: boolean, isComplete: boolean) => {
-  if (isInProcess) return 'warning';
-  if (isComplete) return 'success';
-  return 'error';
-};
-
-const getChipIcon = (isInProcess: boolean, isComplete: boolean) => {
-  if (isInProcess) return <HourglassEmpty />;
-  if (isComplete) return <Check />;
-  return <Close />;
-};
-
-const TestProcessCard: FC<TestProcessCardProps> = ({
-  title,
-  testVariant,
-  isInProcess,
-  isComplete,
-  onStartTest,
-  onContinueTest,
-}) => {
-  const handleClick = () => {
-    if (isInProcess) onContinueTest?.();
-    else onStartTest?.();
-  };
-
-  return (
-    <Card>
-      <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-        <Grid sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          <Typography
-            fontWeight={'bold'}
-            fontSize={'20px'}
-          >
-            {title}
-          </Typography>
-          <Chip
-            label={getChipLabel(isInProcess, isComplete)}
-            icon={getChipIcon(isInProcess, isComplete)}
-            color={getChipColor(isInProcess, isComplete)}
-            variant='filled'
-            size='small'
-          />
-        </Grid>
-
-        <Typography>{testVariant}</Typography>
-      </CardContent>
-      <CardActions>
-        {!isComplete && (
-          <Button
-            fullWidth
-            onClick={handleClick}
-          >
-            {isInProcess ? 'Продолжить' : 'Пройти'}
-          </Button>
-        )}
-      </CardActions>
-    </Card>
   );
 };

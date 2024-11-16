@@ -1,5 +1,12 @@
 import { FC, ReactNode, useState } from 'react';
 import { Controller, useForm, UseFormHandleSubmit } from 'react-hook-form';
+import {
+  CREATE_STUDENT_GROUP,
+  GET_STUDENT_GROUPS,
+} from '../../../apollo/fetchs/student';
+import { useViewModal } from '../../../shared/hooks/useViewModal';
+import { useMutation, useQuery } from '@apollo/client';
+import { genPassword } from '../../../shared/utils/genPassword';
 import { FormLayout } from '../../../shared/ui/form/form-layout';
 import {
   Autocomplete,
@@ -12,41 +19,35 @@ import {
 import { DialogForForm } from '../../../shared/ui/form/dialog-for-form';
 import { DialogTitleForForm } from '../../../shared/ui/form/dialog-for-form/components';
 import { LoadingButton } from '@mui/lab';
-import { useMutation, useQuery } from '@apollo/client';
-import {
-  CREATE_EMPLOYEE_POSITION,
-  GET_EMPLOYEE_POSITIONS,
-} from '../../../apollo/fetchs/employee';
-import { useViewModal } from '../../../shared/hooks/useViewModal';
 import { Add, Visibility } from '@mui/icons-material';
-import { genPassword } from '../../../shared/utils/genPassword';
 
-export interface EmployeeFormFields {
+export interface StudentFormFields {
+  passbookNumber: number;
   name: string;
-  email: string;
-  password: string;
+  groupId: number;
   login: string;
-  positionId: number;
+  password: string;
 }
-interface EmployeeFormProps {
-  initValue?: Partial<EmployeeFormFields>;
-  onSubmit: (form: EmployeeFormFields) => void;
+
+interface StudentFormProps {
+  initValue?: Partial<StudentFormFields>;
+  onSubmit: (form: StudentFormFields) => void;
   isLoading?: boolean;
   renderFormActions: (
-    handleSubmit: UseFormHandleSubmit<EmployeeFormFields>
+    handleSubmit: UseFormHandleSubmit<StudentFormFields>
   ) => ReactNode;
 }
 
-export const EmployeeForm: FC<EmployeeFormProps> = ({
-  initValue,
-  isLoading = false,
+export const StudentForm: FC<StudentFormProps> = ({
   onSubmit,
   renderFormActions,
+  initValue,
+  isLoading = false,
 }) => {
-  const createPositionController = useViewModal();
+  const createGroupController = useViewModal();
   const { onToggle, isOpen, open } = useViewModal();
-  const { data, loading } = useQuery(GET_EMPLOYEE_POSITIONS);
-  const { handleSubmit, control, setValue } = useForm<EmployeeFormFields>({
+  const { data, loading } = useQuery(GET_STUDENT_GROUPS);
+  const { handleSubmit, control, setValue } = useForm<StudentFormFields>({
     defaultValues: initValue,
   });
 
@@ -58,10 +59,10 @@ export const EmployeeForm: FC<EmployeeFormProps> = ({
 
   return (
     <>
-      <CreateEmployeePositionForm
-        isOpen={createPositionController.isOpen}
-        onClose={createPositionController.close}
-        onSubmit={createPositionController.close}
+      <CreateStudentGroupForm
+        isOpen={createGroupController.isOpen}
+        onClose={createGroupController.close}
+        onSubmit={createGroupController.close}
       />
       <FormLayout
         onSubmit={handleSubmit(onSubmit)}
@@ -78,8 +79,8 @@ export const EmployeeForm: FC<EmployeeFormProps> = ({
               disabled={disabled}
               value={value}
               onChange={(e) => onChange(e.target.value)}
-              placeholder='Введите имя сотрудника'
-              label='Имя сотрудника'
+              placeholder='Введите имя студента'
+              label='Имя студента'
               required
             />
           )}
@@ -87,23 +88,32 @@ export const EmployeeForm: FC<EmployeeFormProps> = ({
 
         <Controller
           control={control}
-          name='email'
+          name='passbookNumber'
           disabled={isLoading}
           render={({ field: { onChange, value, disabled } }) => (
             <TextField
               disabled={disabled}
               value={value}
-              onChange={(e) => onChange(e.target.value)}
-              placeholder='Введите email сотрудника'
-              label='Почта сотрудника'
+              onChange={(e) =>
+                onChange(
+                  !e.target.value
+                    ? null
+                    : Number(e.target.value.replace(/\D/g, ''))
+                )
+              }
+              placeholder='Введите номер зачетной книжки'
+              label='Номер зачетной книжки'
               required
+              inputProps={{
+                pattern: '[0-9]*',
+              }}
             />
           )}
         />
 
         <Controller
           control={control}
-          name='positionId'
+          name='groupId'
           disabled={isLoading}
           render={({ field: { onChange, value, disabled } }) => (
             <Grid
@@ -113,13 +123,12 @@ export const EmployeeForm: FC<EmployeeFormProps> = ({
               <Autocomplete
                 sx={{ flex: 1 }}
                 disabled={disabled}
-                options={data?.getEmployeePositions || []}
+                options={data?.getStudentGroups || []}
                 onChange={(_, val) => onChange(val?.id)}
                 value={
                   data
-                    ? data.getEmployeePositions.find(
-                        (pos) => pos.id === value
-                      ) || null
+                    ? data.getStudentGroups.find((pos) => pos.id === value) ||
+                      null
                     : null
                 }
                 loading={loading}
@@ -131,8 +140,8 @@ export const EmployeeForm: FC<EmployeeFormProps> = ({
                     {...params}
                     value={value}
                     required
-                    placeholder='Выберите должность сотрудника'
-                    label='Должность сотрудника'
+                    placeholder='Выберите группу студента'
+                    label='Группа студента'
                     InputProps={{
                       ...params.InputProps,
                       endAdornment: (
@@ -140,7 +149,7 @@ export const EmployeeForm: FC<EmployeeFormProps> = ({
                           <IconButton
                             size='small'
                             sx={{ my: -1 }}
-                            onClick={createPositionController.open}
+                            onClick={createGroupController.open}
                           >
                             <Add sx={{ height: 20, width: 20 }} />
                           </IconButton>
@@ -214,78 +223,32 @@ export const EmployeeForm: FC<EmployeeFormProps> = ({
   );
 };
 
-interface CreateEmployeeDialogProps {
-  isOpen: boolean;
-  onClose: () => void;
-  isLoading?: boolean;
-  initValue?: Partial<EmployeeFormFields>;
-  onSubmit: (form: EmployeeFormFields) => void;
-}
-export const CreateEmployeeDialog: FC<CreateEmployeeDialogProps> = ({
-  isOpen,
-  onClose,
-  isLoading = false,
-  initValue,
-  onSubmit,
-}) => {
-  return (
-    <DialogForForm
-      head={<DialogTitleForForm title='Создание сотрудника' />}
-      open={isOpen}
-      onClose={onClose}
-    >
-      <EmployeeForm
-        onSubmit={onSubmit}
-        isLoading={isLoading}
-        initValue={initValue}
-        renderFormActions={() => [
-          <LoadingButton
-            key={1}
-            type='submit'
-            variant='contained'
-            loading={isLoading}
-          >
-            Создать
-          </LoadingButton>,
-          <LoadingButton
-            key={2}
-            onClick={onClose}
-            color='customGrey'
-            variant='contained'
-            disabled={isLoading}
-          >
-            Закрыть
-          </LoadingButton>,
-        ]}
-      />
-    </DialogForForm>
-  );
-};
-
-interface CreateEmployeePositionFormProps {
+interface CreateStudentGroupFormProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: () => void;
 }
-export const CreateEmployeePositionForm: FC<
-  CreateEmployeePositionFormProps
-> = ({ isOpen, onClose, onSubmit }) => {
-  const [position, setPosition] = useState('');
-  const [createEmployeePosition, { loading }] = useMutation(
-    CREATE_EMPLOYEE_POSITION,
-    { refetchQueries: [{ query: GET_EMPLOYEE_POSITIONS }] }
-  );
+export const CreateStudentGroupForm: FC<CreateStudentGroupFormProps> = ({
+  isOpen,
+  onClose,
+  onSubmit,
+}) => {
+  const [title, setTitle] = useState('');
+
+  const [createStudentGroup, { loading }] = useMutation(CREATE_STUDENT_GROUP, {
+    refetchQueries: [{ query: GET_STUDENT_GROUPS }],
+  });
 
   const handleSubmit = () => {
-    createEmployeePosition({ variables: { title: position } }).then(() => {
+    createStudentGroup({ variables: { title } }).then(() => {
       onSubmit();
-      setPosition('');
+      setTitle('');
     });
   };
 
   return (
     <DialogForForm
-      head={<DialogTitleForForm title='Создание должности' />}
+      head={<DialogTitleForForm title='Создание группы студентов' />}
       open={isOpen}
       onClose={onClose}
     >
@@ -315,10 +278,58 @@ export const CreateEmployeePositionForm: FC<
           label={'Название должности'}
           placeholder='Введите название должности'
           required
-          value={position}
-          onChange={(e) => setPosition(e.target.value)}
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
         />
       </FormLayout>
+    </DialogForForm>
+  );
+};
+
+interface CreateStudentDialogProps {
+  isOpen: boolean;
+  onClose: () => void;
+  isLoading: boolean;
+  initValue?: Partial<StudentFormFields>;
+  onSubmit: (form: StudentFormFields) => void;
+}
+export const CreateStudentDialog: FC<CreateStudentDialogProps> = ({
+  isOpen,
+  onClose,
+  isLoading = false,
+  initValue,
+  onSubmit,
+}) => {
+  return (
+    <DialogForForm
+      head={<DialogTitleForForm title='Создание студента' />}
+      open={isOpen}
+      onClose={onClose}
+    >
+      <StudentForm
+        onSubmit={onSubmit}
+        isLoading={isLoading}
+        initValue={initValue}
+        renderFormActions={() => [
+          <LoadingButton
+            key={1}
+            type='submit'
+            variant='contained'
+            loading={isLoading}
+          >
+            Создать
+          </LoadingButton>,
+          <LoadingButton
+            key={2}
+            onClick={onClose}
+            color='customGrey'
+            variant='contained'
+            disabled={isLoading}
+          >
+            Закрыть
+          </LoadingButton>,
+        ]}
+      />
     </DialogForForm>
   );
 };

@@ -19,24 +19,14 @@ export const EMPLOYEE_FIELDS_MAP: FieldMapType<Employee>[] = [
     getTableCellProps: () => ({}),
     renderComponent: (employee) => <Typography>{employee.name}</Typography>,
   },
-  // {
-  //   field: 'User',
-  //   title: 'Логин',
-  //   isShow: true,
-  //   order: 2,
-  //   getTableCellProps: () => ({}),
-  //   renderComponent: (employee) => (
-  //     <Typography>{employee.User.login}</Typography>
-  //   ),
-  // },
   {
-    field: 'EmploeePosition',
+    field: 'EmployeePosition',
     title: 'Должность',
     isShow: true,
     order: 3,
     getTableCellProps: () => ({}),
     renderComponent: (employee) => (
-      <Typography>{employee.EmploeePosition.title}</Typography>
+      <Typography>{employee.EmployeePosition.title}</Typography>
     ),
   },
 

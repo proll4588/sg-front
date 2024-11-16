@@ -15,10 +15,10 @@ export const GET_EMPLOYEE_TEST_PROCESSES = gql(`
           id
         }
       }
-      EmplyeeProcessMembers {
+      EmployeeProcessMembers {
         id
         employeeTestProcessId
-        Emplouee {
+        Employee {
           name
           id
           email
@@ -30,7 +30,7 @@ export const GET_EMPLOYEE_TEST_PROCESSES = gql(`
               id
             }
           }
-          EmploeePosition {
+          EmployeePosition {
             title
             id
           }
@@ -44,7 +44,7 @@ export const GET_EMPLOYEE_TEST_PROCESSES = gql(`
         startDate
         id
         endDate
-        Emplouee {
+        Employee {
           name
           id
           email
@@ -56,7 +56,7 @@ export const GET_EMPLOYEE_TEST_PROCESSES = gql(`
               title
             }
           }
-          EmploeePosition {
+          EmployeePosition {
             id
             title
           }
@@ -109,10 +109,10 @@ export const CREATE_EMPLOYEE_TEST_PROCESS = gql(`
         id
       }
     }
-    EmplyeeProcessMembers {
+    EmployeeProcessMembers {
       id
       employeeTestProcessId
-      Emplouee {
+      Employee {
         name
         id
         email
@@ -124,7 +124,7 @@ export const CREATE_EMPLOYEE_TEST_PROCESS = gql(`
             id
           }
         }
-        EmploeePosition {
+        EmployeePosition {
           title
           id
         }
@@ -175,12 +175,12 @@ export const GET_AVAILABLE_EMPLOYEE_TEST_PROCESSES = gql(`
       id
       title
     }
-    EmplyeeProcessMembers {
+    EmployeeProcessMembers {
       id
       employeeTestProcessId
-      Emplouee {
+      Employee {
         id
-        EmploeePosition {
+        EmployeePosition {
           id
           title
         }

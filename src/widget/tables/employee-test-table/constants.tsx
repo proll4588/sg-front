@@ -50,7 +50,7 @@ export const EMPLOYEE_TEST_FIELDS_MAP: FieldMapType<EmployeeTest>[] = [
     },
   },
   {
-    field: 'EmplyeeProcessMembers',
+    field: 'EmployeeProcessMembers',
     title: 'Участники',
     isShow: true,
     order: 5,
@@ -61,10 +61,10 @@ export const EMPLOYEE_TEST_FIELDS_MAP: FieldMapType<EmployeeTest>[] = [
         flexDirection={'column'}
         gap={1}
       >
-        {employee.EmplyeeProcessMembers.map((el) => {
-          const employeeId = el.Emplouee.id;
+        {employee.EmployeeProcessMembers.map((el) => {
+          const employeeId = el.Employee.id;
           const employeeTest = employee.EmployeeTest?.find(
-            (et) => et.Emplouee.id === employeeId
+            (et) => et.Employee.id === employeeId
           );
           const isEmployeeTestCompleted =
             employeeTest && employeeTest?.endDate !== null;
@@ -83,7 +83,7 @@ export const EMPLOYEE_TEST_FIELDS_MAP: FieldMapType<EmployeeTest>[] = [
 
           return (
             <Chip
-              label={`${el.Emplouee.name} (${el.Emplouee.EmploeePosition.title})`}
+              label={`${el.Employee.name} (${el.Employee.EmployeePosition.title})`}
               icon={icon}
               color={color}
               variant='outlined'

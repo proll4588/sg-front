@@ -1,20 +1,12 @@
 import { BaseComponentProps } from '../../../shared/ui/table/types/base-table-props';
 
 export type Employee = {
-  id: number;
   name: string;
+  id: number;
   email: string;
-  EmploeePosition: {
+  EmployeePosition: {
     id: number;
     title: string;
-  };
-  User: {
-    id: number;
-    login: string;
-    Role: {
-      id: number;
-      title: string;
-    };
   };
 };
 

@@ -15,10 +15,10 @@ export type EmployeeTest = {
     };
   };
   //   Участники
-  EmplyeeProcessMembers: Array<{
+  EmployeeProcessMembers: Array<{
     id: number;
     employeeTestProcessId: number;
-    Emplouee: {
+    Employee: {
       name: string;
       id: number;
       email: string;
@@ -30,7 +30,7 @@ export type EmployeeTest = {
           id: number;
         };
       };
-      EmploeePosition: {
+      EmployeePosition: {
         title: string;
         id: number;
       };
@@ -44,7 +44,7 @@ export type EmployeeTest = {
     startDate: string;
     id: number;
     endDate?: string | null;
-    Emplouee: {
+    Employee: {
       name: string;
       id: number;
       email: string;

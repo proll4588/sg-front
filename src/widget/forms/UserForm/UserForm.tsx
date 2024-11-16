@@ -4,14 +4,14 @@ import { Role } from '../../tables/users-table/type';
 import { FormLayout } from '../../../shared/ui/form/form-layout';
 import { Autocomplete, Button, TextField } from '@mui/material';
 import { useMutation, useQuery } from '@apollo/client';
-import {
-  GET_USERS,
-  GET_USERS_ROLES,
-  REGISTRATION,
-} from '../../../apollo/fetchs';
 import { DialogForForm } from '../../../shared/ui/form/dialog-for-form';
 import { DialogTitleForForm } from '../../../shared/ui/form/dialog-for-form/components';
 import { LoadingButton } from '@mui/lab';
+import {
+  CREATE_USER,
+  GET_USERS,
+  GET_USERS_ROLES,
+} from '../../../apollo/fetchs/user';
 
 export interface UserFormFields {
   login: string;
@@ -106,7 +106,7 @@ export const CreateUserFormDialog: FC<CreateUserFormDialogProps> = ({
   close,
   isOpen,
 }) => {
-  const [reg, { loading }] = useMutation(REGISTRATION, {
+  const [reg, { loading }] = useMutation(CREATE_USER, {
     refetchQueries: [{ query: GET_USERS, variables: { roleId: null } }],
   });
 

@@ -1,4 +1,4 @@
-import { Checklist, FileUpload, Group, Info, Quiz } from '@mui/icons-material';
+import { Checklist, Group } from '@mui/icons-material';
 import { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 

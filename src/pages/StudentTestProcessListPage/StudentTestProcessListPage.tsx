@@ -14,7 +14,6 @@ import {
   ListItem,
   ListItemText,
   Skeleton,
-  Typography,
 } from '@mui/material';
 import { UiSearchBar } from '../../shared/ui/ui-search-bar';
 import { Assignment } from '@mui/icons-material';
